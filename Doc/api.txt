@@ -1,0 +1,184 @@
+系统配置文档
+
+1用户配置列表   /cfMosqueManage/scuser/list.do
+
+	参数：pageSize   int    必填
+	      pageNo     int    必填
+	      name       String  选填     用户名
+	      orgunitId   int     选填     所属组织ID
+	      roleId   int     选填         所属角色Id
+
+	  返回结果：
+
+
+2添加用户   /cfMosqueManage/scuser/add.do
+
+   参数：  name	        string       必填
+	      loginName     string       必填
+	      pwd           String       必填     密码
+	      phone         String       必填     电话
+	      roleId        int          必填         所属角色Id
+	      orgunitId     int          必填     所属组织ID
+	      email         String       可选      邮箱
+	      memo          String       可选      备注
+
+	  返回结果：
+
+
+3. 修改用户                  /cfMosqueManage/scuser/modify.do
+
+	参数：id             int         必填      用户ID
+		  name	        string       必填      用户名
+	      loginName     string       必填	   登录名
+	      pwd           String       必填     密码
+	      phone         String       必填     电话
+	      roleId        int          必填         所属角色Id
+	      orgunitId     int          必填     所属组织ID
+	      email         String       可选      邮箱
+	      memo          String       可选      备注
+
+	  返回结果：
+
+
+4.删除用户                  /cfMosqueManage/scuser/delete.do
+
+		参数：ids             int         必填      用户ID,多个用逗号分割
+			  type           int         必填      type=0时删除全部用户,type!=0时删除选中用户
+
+		返回结果：
+
+
+5，角色配置列表     	/cfMosqueManage/mqrole/list.do
+
+	参数：pageSize   int    必填
+	      pageNo     int    必填
+	      roleId     int    必填       角色Id
+
+
+6,添加角色               /cfMosqueManage/mqrole/add.do
+
+      参数：  name	        string       必填
+      		  memo          String       选填
+
+	返回结果：
+
+
+
+ 7，修改角色                /cfMosqueManage/mqrole/modify.do
+
+ 		参数：id               int       必填
+ 			  name	        string       选填
+      		  memo          String       选填
+      返回结果：
+
+
+
+  8,删除角色               /cfMosqueManage/mqrole/delete.do
+
+  		参数：id               int       必填
+
+      返回结果：
+
+
+  9.获取所有角色           /cfMosqueManage/mqrole/getAllRole.do    (权限配置)
+  {
+  "status": 0,
+  "message": "操作成功",
+  "result": [
+    {
+      "id": 1,
+      "name": "系统管理员",
+      "memo": "系统管理员",
+      "gmtCreate": 1515743313000,
+      "gmtModified": 1515743313000
+    },
+    {
+      "id": 2,
+      "name": "运维人员",
+      "memo": "运维人员",
+      "gmtCreate": 1515743341000,
+      "gmtModified": 1515743341000
+    },
+    {
+      "id": 4,
+      "name": "寺管会成员",
+      "memo": "寺管会成员",
+      "gmtCreate": 1515745892000,
+      "gmtModified": 1515745894000
+    },
+    {
+      "id": 5,
+      "name": "公安领导",
+      "memo": "公安领导",
+      "gmtCreate": 1515745905000,
+      "gmtModified": 1515745905000
+    }
+  ]
+}
+
+
+  10.获取组织的树结构  	  /cfMosqueManage/orgunit/getTree.do
+
+
+  11.根据组织Id得到组织   /cfMosqueManage/orgunit/getOrgunitById.do
+
+  		参数：orgunitId               int       必填
+
+      返回结果：
+
+
+ 12.新增子项目           /cfMosqueManage/orgunit/addSubOrgunit.do
+
+ 		参数：name               String       必填     名字
+ 			  parentId            int         必填		父节点Id
+ 			  coordinate	      String      选填	   坐标位置
+ 			  memo               String        选填     备注
+ 			  code               String       选填      机构编号
+ 			  sort_num            int         选填       排序号
+
+      返回结果：
+
+
+ 13修改组织                /cfMosqueManage/orgunit/modifySubOrgunit.do
+
+ 		参数：id                 int         必填	    组织ID
+ 			  name               String       必填     名字
+ 			  parentId            int         必填		父节点Id
+ 			  coordinate	      String      选填	   坐标位置
+ 			  memo               String        选填     备注
+ 			  code               String       选填      机构编号
+ 			  sort_num            int         选填       排序号
+
+      返回结果：
+
+ 14.删除组织 			 /cfMosqueManage/orgunit/deleteOrgunit.do
+
+ 		参数：orgunitId               int       必填
+
+      返回结果：
+
+15.获取所有模块                     /cfMosqueManage/module/getAllModule.do
+
+  		返回结果：
+
+
+16.添加用户权限                  /cfMosqueManage/module/bindRoleModule.do
+
+		参数：roleId               int       必填       角色Id
+			  moduleIds            int       必填       模块ID （多个用逗号分割）
+
+
+
+17.//根据角色Id和父模块ID查询子节点（）       /cfMosqueManage/module/getSubModuleByRlIdAndMdId.do
+
+    参数：  roleId          int         必填           角色ID
+            parentId        int         必填             父节点Id
+
+      返回结果
+
+18. 根据id得到所有上级组织       /cfMosqueManage/orgunit/getAllParentIdByOrgId.do
+
+    参数：  orgunitId          int         必填           组织Id
+
+      返回结果
+
