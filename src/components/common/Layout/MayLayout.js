@@ -30,7 +30,6 @@ class MayLayout extends React.Component {
   };
   renderNavItem = () => {
     if (this.props.navigation.navItem && this.props.navigation.navItem.length > 0) {
-      console.log(this.props.navigation.navItem);
       return this.props.navigation.navItem.map(value =>
         <li className={styles.navItem} key={value.moduleId}>
           <Link className={styles.navLink} to={`/${value.url}`}>

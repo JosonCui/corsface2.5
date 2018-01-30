@@ -6,6 +6,7 @@ const roadhog = require('./.roadhogrc');
 function fixProducIconPath(less) {
   if (process.env.NODE_ENV === 'production') {
     let { '@icon-url': url } = less;
+    console.log(url)
     const publicPath = roadhog.publicPath;
 
     if (url && url.length > 0) {
@@ -19,6 +20,7 @@ function fixProducIconPath(less) {
 
 module.exports = () => {
   const themePath = path.join(__dirname, './src/theme/default.less');
+  console.log(themePath)
   let less = lessToJs(fs.readFileSync(themePath, 'utf8'));
   less = fixProducIconPath(less);
   console.dir(less);

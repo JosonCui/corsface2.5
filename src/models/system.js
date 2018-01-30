@@ -2,6 +2,8 @@
  * Created by Jason on 2018/1/16.
  */
 import MD5 from 'crypto-js/md5';
+
+import { ROLE_CONFIG_PAGE_SIZE } from '../utils/config'
 import { isApiSuccess, apiData } from '../utils/utils';
 import {getRoleList,
         getAllRoles,
@@ -30,7 +32,7 @@ export default {
     confirmVisiable: false,
     roleCfg: {
       getRoleParams: {
-        pageSize: 10,
+        pageSize: ROLE_CONFIG_PAGE_SIZE,
         pageNo: 1,
         roleId: ''
       },

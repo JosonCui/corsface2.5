@@ -1,4 +1,7 @@
+@import "~antd/dist/antd.less";
+@import "./theme/default.less";
 @import "./theme/common.less";
+
 
 html {
   font-size: 14px;
@@ -40,6 +43,7 @@ html, body, :global(#root) {
   border: 1px solid @cf-border-color;
   text-align: center;
   color: #d6d6d6;
+  padding: 8px;
   font-size: 16px;
 }
 
@@ -69,6 +73,11 @@ html, body, :global(#root) {
 /* antd Input 样式重写 */
 :global(#root .ant-input){
   border: 1px solid @cf-border-color;
+}
+:global(div .ant-checkbox + span){
+  padding-left: 8px;
+  padding-right: 8px;
+  color: #fff;
 }
 
 /* antd Tree 样式重写 */
@@ -105,3 +114,5 @@ html, body, :global(#root) {
   .border-bottom;
   margin: 0;
 }
+
+/* Upload 样式重写 */

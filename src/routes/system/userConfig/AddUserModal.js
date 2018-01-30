@@ -11,7 +11,7 @@ const { TextArea } = Input;
 const AddUserModal = ({
                         visiable,
                         dataSource,
-        groupTree,
+                        groupTree,
                         onAddModalCancel,
                         userNameChange,
                         userLoginNameChange,

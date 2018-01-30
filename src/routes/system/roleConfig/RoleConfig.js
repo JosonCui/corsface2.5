@@ -5,6 +5,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { Select, Button, Table } from 'antd';
 
+import {ROLE_CONFIG_PAGE_SIZE} from '../../../utils/config'
 import MayLayout from '../../../components/common/Layout/MayLayout';
 import ComfirmModal from '../../../components/common/ConfirmModal/ConfirmModal';
 import Pagination from '../../../components/common/PaginationView/PaginationView';
@@ -40,7 +41,7 @@ class RoleConfig extends React.Component {
         roleCfg: {
           ...roleCfg,
           getRoleParams: {
-            pageSize: 10,
+            pageSize: ROLE_CONFIG_PAGE_SIZE,
             pageNo: 1,
             roleId: value
           }

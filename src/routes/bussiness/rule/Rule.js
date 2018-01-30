@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Input, Button, Icon, Row, Col, Select, Table } from 'antd';
 import styles from './Rule.less';
 import MayLayout from '../../../components/common/Layout/MayLayout';
+import AddRuleModule from './AddRuleModule';
 import ComfirmModal from '../../../components/common/ConfirmModal/ConfirmModal';
 import Pagination from '../../../components/common/PaginationView/PaginationView';
 
@@ -12,39 +13,39 @@ const { Column } = Table;
 class Rule extends React.Component {
   onAddBtnClick = () => {
     this.setState({
-      action: 'newDevice'
+      action: 'newRule'
     });
-    const device = this.props.bussiness.device;
-    // this.props.dispatch({
-    //   type: 'bussiness/success',
-    //   payload: {
-    //     device: {
-    //       ...device,
-    //       addCameraModule: true
-    //     }
-    //   }
-    // });
+    const rule = this.props.bussiness.rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          addRuleModule: true
+        }
+      }
+    });
   }
   onAddModalCancel = () => {
-    const device = this.props.bussiness.device;
-    // this.props.dispatch({
-    //   type: 'bussiness/success',
-    //   payload: {
-    //     device: {
-    //       ...device,
-    //       addCameraModule: false
-    //     }
-    //   }
-    // });
+    const rule = this.props.bussiness.rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          addRuleModule: false
+        }
+      }
+    });
   }
   onAddSubmit = () => {
     switch (this.state.action) {
-      case 'newDevice':
+      case 'newRule':
         this.props.dispatch({
           // type: 'system/addUser'
         });
         break;
-      case 'editDevice':
+      case 'editRule':
         this.props.dispatch({
           // type: 'system/modifyUser'
         });
@@ -182,7 +183,11 @@ class Rule extends React.Component {
             {/*/>*/}
           </div>
         </div>
-
+        <AddRuleModule
+          visiable={this.props.bussiness.rule.addRuleModule}
+          onAddModalCancel={this.onAddModalCancel}
+          onSubmit={this.onAddSubmit}
+        />
         {/*<ComfirmModal*/}
         {/*visiable={this.props.system.confirmVisiable}*/}
         {/*onSubmit={this.onComfirmSubmit}*/}

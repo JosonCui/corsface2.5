@@ -1,8 +1,6 @@
 /**
  * Created by Jason on 2018/1/12.
  */
-import React from 'react';
-import { connect } from 'dva';
 import { Input, Button, Select } from 'antd';
 
 import styles from './groupConfig.less';
@@ -69,8 +67,4 @@ const GroupNew = ({ dataSource, isOrgunitShow, onNameChange, onMemoChange, onCoo
   );
 };
 
-function mapStateToProps({ system }) {
-  return { system };
-}
-
-export default connect(mapStateToProps)(GroupNew);
+export default GroupNew;

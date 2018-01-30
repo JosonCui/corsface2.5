@@ -3,13 +3,14 @@
  * Created by Ethan on 2018/1/16.
  */
 import React from 'react';
-import { Modal, Button, Input, Select, Icon, Row} from 'antd';
+import { Modal, Button, Input, Select, Icon, Row, Checkbox} from 'antd';
 import { connect } from 'dva';
-import styles from './Device.less';
+import styles from './Rule.less';
 
 const Option = Select.Option;
 const { TextArea } = Input;
-const AddCameraModule = ({
+const CheckboxGroup = Checkbox.Group;
+const AddRuleModule = ({
                         visiable,
                         dataSource,
                         onAddModalCancel,
@@ -56,6 +57,10 @@ const AddCameraModule = ({
   function onAddClick() {
     onSubmit();
   }
+  function onChange(checkedValues) {
+    console.log('checked = ', checkedValues);
+  }
+  const plainOptions = ['Apple', 'Pear', 'Orange'];
   return (
     <div>
       <Modal
@@ -65,28 +70,19 @@ const AddCameraModule = ({
         onCancel={onCancel}
         closable={false}
         width={500}
-        bodyStyle={{height: 600, border: '1px solid #02abe3'}}
+        bodyStyle={{height: 530, border: '1px solid #02abe3'}}
         className={styles.modalBody}
       >
         <div className={styles.modalHeader}>
-          <span className={styles.modalHeaderTitle}>新建摄像头</span>
+          <span className={styles.modalHeaderTitle}>新建规则</span>
         </div>
         <div className={styles.serchWrap}>
-          <div className={styles.text}>摄像头名称</div>
+          <div className={styles.text}>摄像头所属组织</div>
           <Input className={styles.input} onChange={onuserLoginNameChange}/>
         </div>
+        <div className={styles.line}></div>
         <div className={styles.serchWrap}>
-          <div className={styles.text}>摄像头品牌</div>
-          <Select
-            className={styles.input}
-            placeholder="请选择品牌"
-            onChange={onuserRoleIdChange}
-          >
-            {onrenderSelectOptions()}
-          </Select>
-        </div>
-        <div className={styles.serchWrap}>
-          <div className={styles.text}>所属组织</div>
+          <div className={styles.text}>目标所属组织</div>
           <Input
             className={styles.input}
             style={{width: 210}}
@@ -94,26 +90,32 @@ const AddCameraModule = ({
           />
         </div>
         <div className={styles.serchWrap}>
-          <div className={styles.text}>IP地址</div>
+          <div className={styles.text}>目标所属分组</div>
+          <Select
+            className={styles.input}
+            onChange={onuserRoleIdChange}
+          >
+            {onrenderSelectOptions()}
+          </Select>
+        </div>
+
+        <div className={styles.serchWrap}>
+          <div className={styles.text}>目标姓名</div>
           <Input className={styles.input} onChange={onuserPwdChange}/>
         </div>
+        <div className={styles.line}></div>
         <div className={styles.serchWrap}>
-          <div className={styles.text}>管理摄像头用户名</div>
+          <div className={styles.text}>处理方式</div>
           <Input className={styles.input} onChange={onuserNameChange}/>
         </div>
         <div className={styles.serchWrap}>
-          <div className={styles.text}>管理摄像头密码</div>
-          <Input type="password" className={styles.input} onChange={onuserEmailChange}/>
-        </div>
-        <div className={styles.serchWrap}>
-          <div className={styles.text}>播放流地址</div>
-          <Input className={styles.input} onChange={onuserNameChange}/>
-          <Button style={{marginLeft: '20px'}} type="primary">测试</Button>
-        </div>
-        <div className={styles.serchWrap}>
-          <div className={styles.text}>采集流地址</div>
-          <Input className={styles.input} onChange={onuserNameChange}/>
-          <Button style={{marginLeft: '20px'}} type="primary">测试</Button>
+          <div className={styles.text}>执行时间</div>
+          <CheckboxGroup
+            style={{marginLeft: '10px', color: '#fff'}}
+            // className={styles.input}
+            options={plainOptions}
+            defaultValue={['Apple']}
+            onChange={onuserEmailChange}/>
         </div>
         <div className={styles.serchWrap}>
           <div className={styles.text}>备注</div>
@@ -123,7 +125,6 @@ const AddCameraModule = ({
             autosize={{ minRows: 2, maxRows: 5 }}
             onChange={onuserMemoChange}
           />
-
         </div>
         <Row type="flex" justify="space-between" className={styles.footer}>
           <Button type="primary" className={styles.refreshMatch} onClick={onAddClick}>新增</Button>
@@ -135,5 +136,5 @@ const AddCameraModule = ({
   );
 };
 
-export default AddCameraModule;
+export default AddRuleModule;
 

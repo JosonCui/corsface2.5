@@ -13,6 +13,10 @@ import styles from './Target.less';
 const { Column } = Table;
 
 class TargetGroup extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
 
   render() {
     return (

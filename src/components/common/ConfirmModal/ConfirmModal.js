@@ -2,12 +2,8 @@
  * Created by Jason on 2018/1/16.
  */
 
-import React from 'react';
-import { Modal, Button, Input, Select, Icon, Row} from 'antd';
+import { Modal, Button, Row} from 'antd';
 import styles from './ConfirmModal.less';
-
-const { TextArea } = Input;
-
 
 const ComfirmModal = ({ visiable, onSubmit, onCancel }) => {
   function onCancelClick() {
