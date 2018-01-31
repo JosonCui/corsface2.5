@@ -136,6 +136,29 @@ class NewPersonModal extends React.Component {
       }
     });
   };
+  onOrgunitIdChange = value => {
+    console.log(value)
+    const poiPerson = this.props.bussiness.poiPerson;
+    const { addPoiParams } = poiPerson;
+    let orgunitId;
+    if (value == 'undefined') {
+      orgunitId = '';
+    } else {
+      orgunitId = value - 0;
+    }
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        poiPerson: {
+          ...poiPerson,
+          addPoiParams: {
+            ...addPoiParams,
+            orgunitId
+          }
+        }
+      }
+    });
+  }
   onThresholdChange = value => {
     const poiPerson = this.props.bussiness.poiPerson;
     const { addPoiParams } = poiPerson;
@@ -183,9 +206,9 @@ class NewPersonModal extends React.Component {
         this.props.dispatch({
           type: 'bussiness/modifyPoi'
         });
-          this.setState({
-              fileList: []
-          });
+        this.setState({
+          fileList: []
+        });
         break;
     }
   };
@@ -252,7 +275,8 @@ class NewPersonModal extends React.Component {
         ));
     return img;
   };
-  renderGroups = () => (this.props.bussiness.poiGroup.allGroups.map(value => (<option value={value.id}>{value.name}</option>)))
+  renderGroups = () => (this.props.bussiness.poiGroup.allGroups.map(value =>
+          (<option value={value.id} key={value.id}>{value.name}</option>)));
 
 
   render() {
@@ -311,22 +335,14 @@ class NewPersonModal extends React.Component {
         <div className={styles.modalInput}>
           <label className={styles.modalLabel}>所属组织：</label>
           <TreeSelect
-            showSearch
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            placeholder="Please select"
+            placeholder="请选择组织"
             allowClear
             treeDefaultExpandAll
-            style={{width: '60%'}}>
-            <TreeNode value="parent 1" title="parent 1" key="0-1">
-              <TreeNode value="parent 1-0" title="parent 1-0" key="0-1-1">
-                <TreeNode value="leaf1" title="my leaf" key="random" />
-                <TreeNode value="leaf2" title="your leaf" key="random1" />
-              </TreeNode>
-              <TreeNode value="parent 1-1" title="parent 1-1" key="random2">
-                <TreeNode value="sss" title={<b style={{ color: '#08c' }}>sss</b>} key="random3" />
-              </TreeNode>
-            </TreeNode>
-          </TreeSelect>
+            value={`${poiPerson.addPoiParams.orgunitId}`}
+            treeData={this.props.bussiness && this.props.bussiness.groupTree ?
+                    this.props.bussiness.groupTree : []}
+            onChange={this.onOrgunitIdChange}
+            style={{width: '60%'}}/>
         </div>
         <div className={styles.modalInput}>
           <label className={styles.modalLabel}>阈值：</label>

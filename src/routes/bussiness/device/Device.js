@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Input, Button, Icon, Row, Col, Select, Table, TreeSelect } from 'antd';
+import { CAMERA_CONFIG } from '../../../utils/config';
 import styles from './Device.less';
 import MayLayout from '../../../components/common/Layout/MayLayout';
 import AddCameraModule from './AddCameraModule';
@@ -57,7 +58,7 @@ class Device extends React.Component {
             memo: '',
             cjdUuid: '',
             cjdSubid: '',
-            config: ''
+            config: CAMERA_CONFIG
           }
         }
       }

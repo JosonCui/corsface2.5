@@ -14,6 +14,13 @@ export async function getPoiList(params) {
 export async function getAllGroups(params) {
   return request(`${config.api.getAllGroups}?${toQueryString(params)}`);
 }
+export async function getGroupsList(params) {
+  return request(`${config.api.getGroupsList}?${toQueryString(params)}`);
+}
+
+export async function alarmRuleList(params) {
+  return request(`${config.api.alarmRuleList}?${toQueryString(params)}`);
+}
 
 export async function addCamrea(params) {
   return request(config.api.addCamrea, {
@@ -53,6 +60,42 @@ export async function modifyPoi(params) {
 }
 export async function deletePoi(params) {
   return request(config.api.deletePoi, {
+    method: 'post',
+    data: params
+  });
+}
+export async function addGroup(params) {
+  return request(config.api.addGroup, {
+    method: 'post',
+    data: params
+  });
+}
+export async function modifyGroup(params) {
+  return request(config.api.modifyGroup, {
+    method: 'post',
+    data: params
+  });
+}
+export async function deleteGroup(params) {
+  return request(config.api.deleteGroup, {
+    method: 'post',
+    data: params
+  });
+}
+export async function addAlarmRule(params) {
+  return request(config.api.addAlarmRule, {
+    method: 'post',
+    data: params
+  });
+}
+export async function modifyAlarmRule(params) {
+  return request(config.api.modifyAlarmRule, {
+    method: 'post',
+    data: params
+  });
+}
+export async function deleteAlarmRule(params) {
+  return request(config.api.deleteAlarmRule, {
     method: 'post',
     data: params
   });

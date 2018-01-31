@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Input, Button, Icon, Row, Col, Select, Table } from 'antd';
+import { Input, Button, Icon, Row, Col, Select, Table, TreeSelect } from 'antd';
 import styles from './Rule.less';
 import MayLayout from '../../../components/common/Layout/MayLayout';
 import AddRuleModule from './AddRuleModule';
@@ -11,6 +11,111 @@ import Pagination from '../../../components/common/PaginationView/PaginationView
 const { Option, OptGroup } = Select;
 const { Column } = Table;
 class Rule extends React.Component {
+  componentDidMount() {
+    this.props.dispatch({
+      type: 'bussiness/getAlarmRuleList'
+    });
+    this.props.dispatch({
+      type: 'bussiness/getGroupTree'
+    });
+    this.props.dispatch({
+      type: 'bussiness/getAllRoles'
+    });
+  }
+  onSearchName = e => {
+    const rule = this.props.bussiness.rule;
+    const { getRuleParams } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          getRuleParams: {
+            ...getRuleParams,
+            pageSize: 10,
+            pageNo: 1,
+            name: e.target.value
+          }
+        }
+      }
+    });
+  }
+  onSearchOrgunit = id => {
+    let value = id - 0;
+    if (!value) {
+      value = '';
+    }
+    const rule = this.props.bussiness.rule;
+    const { getRuleParams } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          getRuleParams: {
+            ...getRuleParams,
+            pageSize: 10,
+            pageNo: 1,
+            orgunitId: value
+          }
+        }
+      }
+    });
+  };
+  renderSelectOptions = () => {
+    let op = '';
+    if (this.props.bussiness && this.props.bussiness.roleList) {
+      if (this.props.bussiness.roleList.length > 0) {
+        op = this.props.bussiness.roleList.map(value => (
+          <Option value={value.id} key={value.id}>{value.name}</Option>
+        ));
+      }
+    }
+
+    return op;
+  };
+  onSelectGroupChange = value => {
+    const rule = this.props.bussiness.rule;
+    const { getRuleParams } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          getRuleParams: {
+            ...getRuleParams,
+            pageSize: 10,
+            pageNo: 1,
+            groupId: value
+          }
+        }
+      }
+    });
+  }
+  onConfigTyperChange = value => {
+    const rule = this.props.bussiness.rule;
+    const { getRuleParams } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          getRuleParams: {
+            ...getRuleParams,
+            pageSize: 10,
+            pageNo: 1,
+            configType: value
+          }
+        }
+      }
+    });
+  }
+  onSearchClick = () => {
+    this.props.dispatch({
+      type: 'bussiness/getAlarmRuleList'
+    });
+  }
+
   onAddBtnClick = () => {
     this.setState({
       action: 'newRule'
@@ -54,38 +159,83 @@ class Rule extends React.Component {
         break;
     }
   }
+  onOneDeleteClick = record => {
+    const rule = this.props.bussiness.rule;
+    const { deleteRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        confirmVisiable: true,
+        rule: {
+          ...rule,
+          deleteRule: {
+            ...deleteRule,
+            id: record.id
+          }
+        }
+      }
+    });
+  };
   tableOperation = record => (
     <div>
       <span title="编辑角色" className={`${styles.tableBtn} ${styles.tableEdit}`} />
-      <span title="删除角色" className={`${styles.tableBtn} ${styles.tableDelete}`} />
+      <span title="删除角色" onClick={this.onOneDeleteClick.bind(this, record)} className={`${styles.tableBtn} ${styles.tableDelete}`} />
     </div>
   );
+  pageTranslate = value => {
+    this.props.dispatch({
+      type: 'bussiness/rolesListTranslate',
+      payload: {
+        pageNo: value.pageNo,
+        pageSize: value.pageSize
+      }
+    });
+  };
+  onComfirmSubmit = () => {
+    this.props.dispatch({
+      type: 'bussiness/deleteRule'
+    });
+  };
+  onComfirmCancel = () => {
+    const rule = this.props.bussiness.rule;
+    const { deleteRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        confirmVisiable: false,
+        rule: {
+          ...rule,
+          deleteRule: {
+            ...deleteRule,
+            id: ''
+          }
+        }
+      }
+    });
+  };
   render() {
     return (
       <MayLayout location={this.props.location}>
         <div className={styles.title}>
-          <div className={styles.line}>默认规则: 本寺的摄像头</div>
+          <span style={{color: '#02abe3'}}>默认规则: 本寺的摄像头</span>
+          <div className={styles.line}/>
           <Row className={styles.searchGroup}>
             <Col span={6} className={styles.condition}>
               <span className={styles.label}>摄像头/目标所属组织</span>
-              <Input
+              <TreeSelect
+                allowClear
+                treeData={this.props.bussiness && this.props.bussiness.groupTree ?
+                  this.props.bussiness.groupTree : []}
                 className={styles.input}
-                style={{width: 200, marginTop: '20px'}}
-                placeholder="输入组织名称或关键字"
-                // onChange={this.onSearchOrgunit}
-                addonAfter={<Icon type="folder-add" />}
+                onChange={this.onSearchOrgunit}
+                treeDefaultExpandAll
+                placeholder="请选择组织"
               />
             </Col>
-            <Col span={3} className={styles.condition}>
-              <span className={styles.label}>姓名</span>
+            <Col span={5} className={styles.condition}>
+              <span className={styles.label}>姓名/身份证号</span>
               <Input
-                // onChange={this.onSearchName}
-                style={{width: 130}}/>
-            </Col>
-            <Col span={4} className={styles.condition}>
-              <span className={styles.label}>身份证号</span>
-              <Input
-                // onChange={this.onSearchName}
+                onChange={this.onSearchName}
                 style={{width: 180}}/>
             </Col>
             <Col span={5} className={styles.condition}>
@@ -94,10 +244,10 @@ class Rule extends React.Component {
                 style={{
                   width: '180px'
                 }}
-                // onChange={this.onSelectUserChange}
+                onChange={this.onSelectGroupChange}
               >
                 <Option value="">全部</Option>
-                {/*{this.renderSelectOptions()}*/}
+                {this.renderSelectOptions()}
               </Select>
             </Col>
             <Col span={3} className={styles.condition}>
@@ -106,21 +256,24 @@ class Rule extends React.Component {
                 style={{
                   width: '100px'
                 }}
-                // onChange={this.onSelectUserChange}
+                onChange={this.onConfigTyperChange}
               >
                 <Option value="">全部</Option>
-                {/*{this.renderSelectOptions()}*/}
+                <Option value="0">报警</Option>
+                <Option value="1">通过</Option>
               </Select>
             </Col>
 
 
-            <Button type="primary"
-              // onClick={this.onSearchClick}
+            <Button
+              type="primary"
+              onClick={this.onSearchClick}
             >查询</Button>
           </Row>
           <div className={styles.btnGroup}>
-            <Button style={{width: '125px'}} className={styles.delete} type="primary"
-                    onClick={this.onAddBtnClick}
+            <Button
+              style={{width: '125px'}} className={styles.delete} type="primary"
+              onClick={this.onAddBtnClick}
             >
               <i className={styles.addIcon} />
               <span>新建规则</span>
@@ -128,44 +281,45 @@ class Rule extends React.Component {
           </div>
           <div className={styles.list}>
             <Table
-              // dataSource={this.props.system.userCfg && this.props.system.userCfg.userTableList ?
-              //   this.props.system.userCfg.userTableList : []}
+              dataSource={this.props.bussiness.rule && this.props.bussiness.rule.ruleTableList ?
+                this.props.bussiness.rule.ruleTableList : []}
               pagination={false}
               bordered
               rowKey={record => record.id}
             >
               <Column
                 title="序号"
-                dataIndex="loginName"
-                key="loginName"/>
+                dataIndex="id"
+                key="id"/>
               <Column
                 title="摄像头所属组织"
-                dataIndex="name"
-                key="name"/>
+                dataIndex="camera_orgunitName"
+                key="camera_orgunitName"/>
               <Column
                 title="目标人姓名"
-                dataIndex="phone"
-                key="phone"/>
+                dataIndex="poiName"
+                key="poiName"/>
               <Column
                 title="目标人身份证号"
-                dataIndex="email"
-                key="email"/>
+                dataIndex="identity_card"
+                key="identity_card"/>
               <Column
                 title="目标所属组织"
-                dataIndex="roleName"
-                key="roleName"/>
+                dataIndex="poi_orgunitName"
+                key="poi_orgunitName"/>
               <Column
                 title="目标所属分组"
-                dataIndex="orgunitName"
-                key="orgunitName"/>
+                dataIndex="groupName"
+                key="groupName"/>
               <Column
                 title="处理方式"
-                dataIndex="orgunitName"
-                key="orgunitName"/>
+                dataIndex="config_type"
+                render={text => text ? '通过' : '报警'}
+                key="config_type"/>
               <Column
                 title="执行时间"
-                dataIndex="time"
-                key="time"/>
+                dataIndex="alarm_time"
+                key="alarm_time"/>
               <Column
                 title="备注"
                 dataIndex="memo"
@@ -176,11 +330,11 @@ class Rule extends React.Component {
               />
             </Table>
 
-            {/*<Pagination*/}
-            {/*className={styles.pagination}*/}
-            {/*page={this.props.system.userCfg.userListPage}*/}
-            {/*pageTranslate={this.pageTranslate ? this.pageTranslate : null}*/}
-            {/*/>*/}
+            <Pagination
+              className={styles.pagination}
+              page={this.props.bussiness.rule.ruleTablePage}
+              pageTranslate={this.pageTranslate ? this.pageTranslate : null}
+            />
           </div>
         </div>
         <AddRuleModule
@@ -188,11 +342,11 @@ class Rule extends React.Component {
           onAddModalCancel={this.onAddModalCancel}
           onSubmit={this.onAddSubmit}
         />
-        {/*<ComfirmModal*/}
-        {/*visiable={this.props.system.confirmVisiable}*/}
-        {/*onSubmit={this.onComfirmSubmit}*/}
-        {/*onCancel={this.onComfirmCancel}*/}
-        {/*/>*/}
+        <ComfirmModal
+          visiable={this.props.bussiness.confirmVisiable}
+          onSubmit={this.onComfirmSubmit}
+          onCancel={this.onComfirmCancel}
+        />
       </MayLayout>
     );
   }

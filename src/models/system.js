@@ -3,7 +3,7 @@
  */
 import MD5 from 'crypto-js/md5';
 
-import { ROLE_CONFIG_PAGE_SIZE } from '../utils/config'
+import { ROLE_CONFIG_PAGE_SIZE } from '../utils/config';
 import { isApiSuccess, apiData } from '../utils/utils';
 import {getRoleList,
         getAllRoles,
@@ -305,14 +305,18 @@ export default {
     },
     * rolePageTranslate({ payload }, { put, select }) {
       const { pageNo, pageSize } = payload;
-      const getRoleParams = yield select(store => store.system.getRoleParams);
+      const roleCfg = yield select(store => store.system.roleCfg);
+      const {getRoleParams} = roleCfg;
       yield put({
         type: 'success',
         payload: {
-          getRoleParams: {
-            ...getRoleParams,
-            pageSize,
-            pageNo
+          roleCfg: {
+            ...roleCfg,
+            getRoleParams: {
+              ...getRoleParams,
+              pageSize,
+              pageNo
+            }
           }
         }
       });

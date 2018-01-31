@@ -10,10 +10,19 @@ import {
   addPoiByUpload,
   modifyPoi,
   deletePoi,
-    getAllGroups
+    getAllGroups,
+    getGroupsList,
+    addGroup,
+    modifyGroup,
+    deleteGroup,
+  alarmRuleList,
+  addAlarmRule,
+  modifyAlarmRulem,
+  deleteAlarmRule
   } from '../services/bussiness';
-import { getGroupTree } from '../services/system';
+import { getAllRoles, getGroupTree } from '../services/system';
 import { isApiSuccess, apiData } from '../utils/utils';
+import { POI_PERSON_PAGE_SIZE, POI_GROUP_PAGE_SIZE, CAMERA_CONFIG } from '../utils/config';
 
 export default {
   namespace: 'bussiness',
@@ -44,18 +53,16 @@ export default {
         memo: '',
         cjdUuid: '',
         cjdSubid: '',
-        config: ''
+        config: CAMERA_CONFIG
       },
       deleteCamrea: {
         srcId: ''
       }
     },
-    rule: {
-      addRuleModule: false
-    },
+
     poiPerson: {
       getPoiListParams: {
-        pageSize: 6,
+        pageSize: POI_PERSON_PAGE_SIZE,
         pageNo: 1,
         name: '',
         gender: '',
@@ -65,7 +72,11 @@ export default {
         threshold: ''
       },
       poiPersonList: [],
-      poiPersonPage: {},
+      poiPersonPage: {
+        total: 0,
+        pageSize: POI_PERSON_PAGE_SIZE,
+        currentPage: 1
+      },
       deletePerson: {
         type: 0,
         personIds: ''
@@ -88,9 +99,51 @@ export default {
       imgUrl: '',
       addPoiModalVisiable: false
     },
+
     poiGroup: {
-      allGroups: []
+      allGroups: [],
+      getGroupsListParams: {
+        pageSize: POI_GROUP_PAGE_SIZE,
+        pageNo: 1,
+        name: '',
+        type: ''
+      },
+      poiGroupList: [],
+      poiGroupPage: {
+        pageSize: POI_GROUP_PAGE_SIZE,
+        currentPage: 1,
+        total: 0
+      },
+      addGroupParams: {
+        id: '',
+        type: '',
+        name: '',
+        memo: '',
+        alarm_threshold: ''
+      },
+      deleteGroup: {
+        groupId: ''
+      },
+      addGroupModalVisiable: false
     },
+
+    rule: {
+      addRuleModule: false,
+      getRuleParams: {
+        pageSize: 10,
+        pageNo: 1,
+        name: '',
+        orgunitId: '',
+        configType: '',
+        groupId: ''
+      },
+      ruleTableList: [],
+      ruleTablePage: {},
+      deleteRule: {
+        id: ''
+      }
+    },
+    roleList: [],
     groupTree: [],
     confirmVisiable: false
   },
@@ -180,7 +233,7 @@ export default {
                 memo: '',
                 cjdUuid: '',
                 cjdSubid: '',
-                config: ''
+                config: CAMERA_CONFIG
               }
             }
           }
@@ -212,6 +265,22 @@ export default {
         // TODO
       }
     },
+    * getGroupTree({ payload }, { put, call, select }) {
+      const groupTree = yield select(store => store.bussiness.groupTree);
+      const response = yield call(getGroupTree);
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        const groupTree = [result];
+        yield put({
+          type: 'success',
+          payload: {
+            groupTree
+          }
+        });
+      } else {
+        // TODO
+      }
+    },
     * cameraListTranslate({ payload }, { put, select }) {
       const { pageNo, pageSize } = payload;
       const device = yield select(store => store.bussiness.device);
@@ -234,7 +303,6 @@ export default {
       });
     },
     * getGroupTree({ payload }, { put, call, select }) {
-      const groupTree = yield select(store => store.bussiness.groupTree);
       const response = yield call(getGroupTree);
       if (isApiSuccess(response)) {
         const result = apiData(response);
@@ -270,6 +338,27 @@ export default {
       } else {
             // TODO
       }
+    },
+    * poiPersonPageTranslate({ payload }, { put, select }) {
+      const { pageNo, pageSize } = payload;
+      const poiPerson = yield select(store => store.bussiness.poiPerson);
+      const {getPoiListParams } = poiPerson;
+      yield put({
+        type: 'success',
+        payload: {
+          poiPerson: {
+            ...poiPerson,
+            getPoiListParams: {
+              ...getPoiListParams,
+              pageSize,
+              pageNo
+            }
+          }
+        }
+      });
+      yield put({
+        type: 'getPoiList'
+      });
     },
     * getAllGroups({payload}, {call, put, select}) {
       const poiGroup = yield select(store => store.bussiness.poiGroup);
@@ -368,13 +457,214 @@ export default {
       if (isApiSuccess(response)) {
         yield put({ type: 'success',
           payload: {
+            poiPerson: {
+              ...poiPerson,
+              deletePerson: {
+                type: 0,
+                personIds: ''
+              }
+            },
             confirmVisiable: false
           }});
         yield put({type: 'getPoiList'});
       } else {
             // TODO
       }
-    }
+    },
+      // 目标分组管理
+    * getGroupsList({payload}, {call, put, select}) {
+      const poiGroup = yield select(store => store.bussiness.poiGroup);
+      const {getGroupsListParams} = poiGroup;
+      const response = yield call(getGroupsList, getGroupsListParams);
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        yield put({
+          type: 'success',
+          payload: {
+            poiGroup: {
+              ...poiGroup,
+              poiGroupList: result.list,
+              poiGroupPage: result.page
+            }
+          }
+        });
+      } else {
+            // TODO
+      }
+    },
+    * poiGroupPageTranslate({ payload }, { put, select }) {
+      const { pageNo, pageSize } = payload;
+      const poiGroup = yield select(store => store.bussiness.poiGroup);
+      const {getGroupsListParams } = poiGroup;
+      yield put({
+        type: 'success',
+        payload: {
+          poiGroup: {
+            ...poiGroup,
+            getGroupsListParams: {
+              ...getGroupsListParams,
+              pageSize,
+              pageNo
+            }
+          }
+        }
+      });
+      yield put({
+        type: 'getGroupsList'
+      });
+    },
+    * addGroup({payload}, {call, put, select}) {
+      const poiGroup = yield select(store => store.bussiness.poiGroup);
+      const { addGroupParams } = poiGroup;
+      const response = yield call(addGroup, addGroupParams);
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        yield put({type: 'getGroupsList'});
+        yield put({
+          type: 'success',
+          payload: {
+            poiGroup: {
+              ...poiGroup,
+              addGroupParams: {
+                id: '',
+                type: '',
+                name: '',
+                memo: ''
+              },
+              addGroupModalVisiable: false
+            }
+          }
+        });
+      } else {
+              // TODO
+      }
+    },
+    * modifyGroup({payload}, {call, put, select}) {
+      const poiGroup = yield select(store => store.bussiness.poiGroup);
+      const { addGroupParams } = poiGroup;
+      const response = yield call(modifyGroup, addGroupParams);
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        yield put({type: 'getGroupsList'});
+        yield put({
+          type: 'success',
+          payload: {
+            poiGroup: {
+              ...poiGroup,
+              addGroupParams: {
+                id: '',
+                type: '',
+                name: '',
+                memo: ''
+              },
+              addGroupModalVisiable: false
+            }
+          }
+        });
+      } else {
+              // TODO
+      }
+    },
+    * deleteGroup({payload}, {call, put, select}) {
+      const poiGroup = yield select(store => store.bussiness.poiGroup);
+      const params = poiGroup.deleteGroup;
+      const response = yield call(deleteGroup, params);
+      if (isApiSuccess(response)) {
+        yield put({ type: 'success',
+          payload: {
+            poiGroup: {
+              ...poiGroup,
+              deleteGroup: {
+                groupId: ''
+              }
+            },
+            confirmVisiable: false
+          }});
+        yield put({type: 'getGroupsList'});
+      } else {
+              // TODO
+      }
+    },
+
+      // 规则管理
+    * getAlarmRuleList({ payload }, { put, call, select }) {
+      const rule = yield select(store => store.bussiness.rule);
+      const { getRuleParams } = rule;
+      const response = yield call(alarmRuleList, getRuleParams);
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        yield put({
+          type: 'success',
+          payload: {
+            rule: {
+              ...rule,
+              ruleTableList: result.list,
+              ruleTablePage: result.page
+            }
+          }
+        });
+      } else {
+        // TODO
+      }
+    },
+    * getAllRoles({ payload }, { put, call }) {
+      const response = yield call(getAllRoles);
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        yield put({
+          type: 'success',
+          payload: {
+            roleList: result
+          }
+        });
+      } else {
+        // TODO
+      }
+    },
+    * deleteRule({ payload }, { put, call, select }) {
+      const rule = yield select(store => store.bussiness.rule);
+      const {deleteRule} = rule;
+      const response = yield call(deleteAlarmRule, deleteRule);
+      if (isApiSuccess(response)) {
+        yield put({type: 'getAlarmRuleList'});
+        yield put({
+          type: 'success',
+          payload: {
+            confirmVisiable: false,
+            rule: {
+              ...rule,
+              deleteRule: {
+                ...deleteRule,
+                id: ''
+              }
+            }
+          }
+        });
+      } else {
+        // TODO
+      }
+    },
+    * rolesListTranslate({ payload }, { put, select }) {
+      const { pageNo, pageSize } = payload;
+      const rule = yield select(store => store.bussiness.rule);
+      const { getRuleParams } = rule;
+      yield put({
+        type: 'success',
+        payload: {
+          rule: {
+            ...rule,
+            getRuleParams: {
+              ...getRuleParams,
+              pageSize,
+              pageNo
+            }
+          }
+        }
+      });
+      yield put({
+        type: 'getAlarmRuleList'
+      });
+    },
   },
   reducers: {
     success(state, action) {

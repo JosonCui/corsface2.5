@@ -1,7 +1,7 @@
 export default {
   'entry': 'src/entry/*.js',
   'outputPath': './dist',
-  'publicPath': '/cf/',
+  'publicPath': '/cfMosqueManage/cf/',
   'multiPage': true,
   'theme': "theme.config.js",
   // "proxy": {

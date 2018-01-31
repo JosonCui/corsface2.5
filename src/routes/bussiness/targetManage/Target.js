@@ -5,6 +5,8 @@ import React from 'react';
 import { connect } from 'dva';
 import { Tabs } from 'antd';
 
+
+import {POI_PERSON_PAGE_SIZE, POI_GROUP_PAGE_SIZE} from '../../../utils/config';
 import styles from './Target.less';
 import MayLayout from '../../../components/common/Layout/MayLayout';
 import TargetPerson from './TargetPerson';
@@ -15,13 +17,14 @@ const TabPane = Tabs.TabPane;
 class Target extends React.Component {
   initState = () => {
     const poiPerson = this.props.bussiness.poiPerson;
+    const poiGroup = this.props.bussiness.poiGroup;
     this.props.dispatch({
       type: 'bussiness/success',
       payload: {
         poiPerson: {
           ...poiPerson,
           getPoiListParams: {
-            pageSize: 10,
+            pageSize: POI_PERSON_PAGE_SIZE,
             pageNo: 1,
             name: '',
             gender: '',
@@ -31,7 +34,26 @@ class Target extends React.Component {
             threshold: ''
           },
           poiPersonList: [],
-          poiPersonPage: {}
+          poiPersonPage: {
+            pageSize: POI_PERSON_PAGE_SIZE,
+            total: 0,
+            currentPage: 1
+          }
+        },
+        poiGroup: {
+          ...poiGroup,
+          getGroupsListParams: {
+            pageSize: POI_GROUP_PAGE_SIZE,
+            pageNo: 1,
+            name: '',
+            type: ''
+          },
+          poiGroupList: [],
+          poiGroupPage: {
+            pageSize: POI_GROUP_PAGE_SIZE,
+            total: 0,
+            currentPage: 1
+          }
         }
       }
     });
@@ -45,7 +67,9 @@ class Target extends React.Component {
         });
         break;
       case 'group':
-        console.log('group');
+        this.props.dispatch({
+          type: 'bussiness/getGroupsList'
+        }); 
         break;
     }
   };
@@ -54,10 +78,10 @@ class Target extends React.Component {
       <MayLayout location={this.props.location}>
         <div className={styles.container}>
           <Tabs type="card" onTabClick={this.onTabsClick}>
-            <TabPane tab="目标人员配置" key="person" style={{ height: '100%' }}>
+            <TabPane tab="目标人员管理" key="person" style={{ height: '100%' }}>
               <TargetPerson />
             </TabPane>
-            <TabPane tab="目标分组配置" key="group" style={{ height: '100%' }}>
+            <TabPane tab="目标分组管理" key="group" style={{ height: '100%' }}>
               <TargetGroup />
             </TabPane>
           </Tabs>

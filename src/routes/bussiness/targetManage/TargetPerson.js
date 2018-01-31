@@ -6,8 +6,10 @@
  */
 import React from 'react';
 import { connect } from 'dva';
-import { Button, Table, Input, Select, InputNumber, Tooltip } from 'antd';
+import { Button, Table, Input, Select, InputNumber, Tooltip, TreeSelect } from 'antd';
 
+import {POI_PERSON_PAGE_SIZE} from '../../../utils/config';
+import Pagination from '../../../components/common/PaginationView/PaginationView';
 import ComfirmModal from '../../../components/common/ConfirmModal/ConfirmModal';
 import NewPersonModal from './NewPersonModal';
 import styles from './Target.less';
@@ -28,6 +30,9 @@ class TargetPerson extends React.Component {
     });
     this.props.dispatch({
       type: 'bussiness/getAllGroups'
+    });
+    this.props.dispatch({
+      type: 'bussiness/getGroupTree'
     });
   }
   onNameChange = e => {
@@ -84,8 +89,26 @@ class TargetPerson extends React.Component {
       }
     });
   };
-  onOrgunitsChange = () => {
+  onOrgunitsChange = id => {
     console.log('nameChange');
+    let value = id - 0;
+    if (!value) {
+      value = '';
+    }
+    const poiPerson = this.props.bussiness.poiPerson;
+    const { getPoiListParams } = poiPerson;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        poiPerson: {
+          ...poiPerson,
+          getPoiListParams: {
+            ...getPoiListParams,
+            orgunitId: value
+          }
+        }
+      }
+    });
   };
   onGroupChange = value => {
     const poiPerson = this.props.bussiness.poiPerson;
@@ -122,11 +145,26 @@ class TargetPerson extends React.Component {
     });
   };
   onSearchBtnClick = () => {
+    const poiPerson = this.props.bussiness.poiPerson;
+    const { getPoiListParams } = poiPerson;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        poiPerson: {
+          ...poiPerson,
+          getPoiListParams: {
+            ...getPoiListParams,
+            pageNo: 1,
+            pageSize: POI_PERSON_PAGE_SIZE
+          }
+        }
+      }
+    });
     this.props.dispatch({
       type: 'bussiness/getPoiList'
     });
   };
-  deleteSelectPersonBtn = () => {
+  onDeleteSelectPersonBtn = () => {
     this.props.dispatch({
       type: 'bussiness/success',
       payload: {
@@ -216,21 +254,40 @@ class TargetPerson extends React.Component {
     }
   };
   onConfirmCancel = () => {
+    const poiPerson = this.props.bussiness.poiPerson;
      // TODO
         // 关闭confirm
     this.props.dispatch({
       type: 'bussiness/success',
       payload: {
+        poiPerson: {
+          ...poiPerson,
+          deletePerson: {
+            type: 0,
+            personIds: ''
+          }
+        },
         confirmVisiable: false
       }
     });
   };
-  renderGroups = () => (this.props.bussiness.poiGroup.allGroups.map(value => (<option value={value.id}>{value.name}</option>)))
+  renderGroups = () => (this.props.bussiness.poiGroup.allGroups.map(value =>
+          (<option value={value.id} key={value.id}>{value.name}</option>)));
 
   renderTableImg = record => (<div className={styles.tableImgBorder}>
-    <img style={{width: '100%', height: '100%'}} src={record.uploadImgs && record.uploadImgs.length > 0 ? record.uploadImgs[0] : ''} alt=""/>
+    <img
+      style={{width: '100%', height: '100%'}}
+      src={record.uploadImgs && record.uploadImgs.length > 0 ? record.uploadImgs[0] : ''} alt=""/>
   </div>);
-  renderTableOrgunits = record => (<div />);
+  renderTableOrgunits = record => {
+    const Orgunits = [];
+    if (record.orgunitList && record.orgunitList.length > 0) {
+      record.orgunitList.map(value => Orgunits.push(value.name));
+    }
+    return (<Tooltip key={record.id} overlayStyle={{backGroundColor: 'rgba(0,0,0,0.9)'}} title={Orgunits.join(',')}>
+      {Orgunits.map(value => <span key={value}>{ value }</span>)}
+    </Tooltip >);
+  };
   renderTableGroups = record => {
     const groups = [];
     if (record.groups && record.groups.length > 0) {
@@ -246,6 +303,16 @@ class TargetPerson extends React.Component {
       <span title="删除目标" onClick={this.onDeleteClick.bind(this, record)} className={`${styles.tableBtn} ${styles.tableDelete}`} />
     </div>
   );
+
+  pageTranslate = value => {
+    this.props.dispatch({
+      type: 'bussiness/poiPersonPageTranslate',
+      payload: {
+        pageNo: value.pageNo,
+        pageSize: value.pageSize
+      }
+    });
+  };
   render() {
     const { getPoiListParams } = this.props.bussiness.poiPerson;
     const rowSelection = {
@@ -311,13 +378,18 @@ class TargetPerson extends React.Component {
           </label>
           <label className={styles.selectInput}>
             <span className={styles.label}>所属组织：</span>
-            <Input
+            <TreeSelect
               style={{
                 width: '10%',
                 marginRight: '5px'
               }}
+              allowClear
+              treeData={this.props.bussiness && this.props.bussiness.groupTree ?
+                            this.props.bussiness.groupTree : []}
               onChange={this.onOrgunitsChange}
-                  />
+              treeDefaultExpandAll
+              placeholder="请选择组织"
+            />
 
           </label>
           <label className={styles.selectInput}>
@@ -352,7 +424,7 @@ class TargetPerson extends React.Component {
           <Button type="primary" style={{ marginLeft: '45px' }} onClick={this.onSearchBtnClick}>查询</Button>
         </div>
         <div className={styles.btnBar}>
-          <a className={styles.delete} onClick={this.deleteSelectPersonBtn}>
+          <a className={styles.delete} onClick={this.onDeleteSelectPersonBtn}>
             <i className={styles.deleteIcon} />
             <span>删除选中用户</span>
           </a>
@@ -388,7 +460,7 @@ class TargetPerson extends React.Component {
             key="identityCard"
               />
           <Column
-            title="身份证号"
+            title="性别"
             dataIndex="gender"
             key="gender"
               />
@@ -415,6 +487,11 @@ class TargetPerson extends React.Component {
             render={record => this.renderTableOperate(record)}
               />
         </Table>
+        <Pagination
+          className={styles.pagination}
+          page={this.props.bussiness.poiPerson.poiPersonPage}
+          pageTranslate={this.pageTranslate ? this.pageTranslate : null}
+        />
         <ComfirmModal
           visiable={this.props.bussiness.confirmVisiable}
           onSubmit={this.onConfirmSubmit}

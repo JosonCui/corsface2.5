@@ -6,6 +6,7 @@ import React from 'react';
 import { Modal, Button, Input, Select, Row, TreeSelect } from 'antd';
 import { connect } from 'dva';
 import styles from './Device.less';
+import {CAMERA_CONFIG} from '../../../utils/config';
 
 const Option = Select.Option;
 const { TextArea } = Input;
@@ -151,6 +152,7 @@ const AddCameraModule = ({ visiable,
           <div className={styles.areaText}>* 参数配置</div>
           <TextArea
             // className={styles.areaInput}
+            // defaultValue={CAMERA_CONFIG}
             style={{width: 300}}
             autosize={{ minRows: 19, maxRows: 19 }}
             onChange={onConfigChange}
