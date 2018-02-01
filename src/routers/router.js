@@ -7,6 +7,7 @@ import RoleCfg from '../routes/system/roleConfig/RoleConfig';
 import GroupCfg from '../routes/system/groupConfig/GroupConfig';
 import PowerCfg from '../routes/system/powerConfig/PowerConfig';
 
+import RealMonitor from '../routes/basics/realMonitor/RealMonitor';
 import HistoryPass from '../routes/basics/historyPass/HistoryPass';
 import HistoryPolice from '../routes/basics/historyPolice/HistoryPolice';
 import RealPolice from '../routes/basics/realPolice/RealPolice';
@@ -14,6 +15,7 @@ import RealPolice from '../routes/basics/realPolice/RealPolice';
 import Device from '../routes/bussiness/device/Device';
 import Target from '../routes/bussiness/targetManage/Target';
 import Rule from '../routes/bussiness/rule/Rule';
+import login from '../routes/login/Login';
 
 
 function RouterConfig({ history }) {
@@ -21,13 +23,15 @@ function RouterConfig({ history }) {
     <Router history={history}>
       <div style={{height: '100%'}}>
         <Route exact path="/" component={NavigationPage}/>
+
         {/* 系统管理 */}
+        <Route exact path="/login" component={login}/>
         <Route exact path="/userCfg" component={UserCfg}/>
         <Route exact path="/roleCfg" component={RoleCfg}/>
         <Route exact path="/groupCfg" component={GroupCfg}/>
         <Route exact path="/powerCfg" component={PowerCfg}/>
         {/* 基础功能 TODO*/}
-        <Route exact path="/realMonitoring" component={HistoryPass}/>
+        <Route exact path="/realMonitoring" component={RealMonitor}/>
         <Route exact path="/historyPass" component={HistoryPass}/>
         <Route exact path="/historyPolice" component={HistoryPolice}/>
         <Route exact path="/realPolice" component={RealPolice}/>

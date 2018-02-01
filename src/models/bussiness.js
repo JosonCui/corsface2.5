@@ -17,8 +17,9 @@ import {
     deleteGroup,
   alarmRuleList,
   addAlarmRule,
-  modifyAlarmRulem,
-  deleteAlarmRule
+  modifyAlarmRule,
+  deleteAlarmRule,
+  getPoiByOrgIdAndGroupId
   } from '../services/bussiness';
 import { getAllRoles, getGroupTree } from '../services/system';
 import { isApiSuccess, apiData } from '../utils/utils';
@@ -139,9 +140,20 @@ export default {
       },
       ruleTableList: [],
       ruleTablePage: {},
+      modifyRule: {
+        cmOrgunitId: '',
+        poiOrgunitId: '',
+        configType: '',
+        alarmTime: [],
+        personId: '',
+        memo: '',
+        targetName: '',
+        groupId: ''
+      },
       deleteRule: {
         id: ''
-      }
+      },
+      targetNameList: []
     },
     roleList: [],
     groupTree: [],
@@ -265,22 +277,6 @@ export default {
         // TODO
       }
     },
-    * getGroupTree({ payload }, { put, call, select }) {
-      const groupTree = yield select(store => store.bussiness.groupTree);
-      const response = yield call(getGroupTree);
-      if (isApiSuccess(response)) {
-        const result = apiData(response);
-        const groupTree = [result];
-        yield put({
-          type: 'success',
-          payload: {
-            groupTree
-          }
-        });
-      } else {
-        // TODO
-      }
-    },
     * cameraListTranslate({ payload }, { put, select }) {
       const { pageNo, pageSize } = payload;
       const device = yield select(store => store.bussiness.device);
@@ -302,7 +298,7 @@ export default {
         type: 'getCameraList'
       });
     },
-    * getGroupTree({ payload }, { put, call, select }) {
+    * getGroupTree({ payload }, { put, call }) {
       const response = yield call(getGroupTree);
       if (isApiSuccess(response)) {
         const result = apiData(response);
@@ -621,6 +617,67 @@ export default {
         // TODO
       }
     },
+    * addAlarmRule({ payload }, { put, call, select }) {
+      const rule = yield select(store => store.bussiness.rule);
+      const { modifyRule } = rule;
+      const alarmTime = modifyRule.alarmTime.join(',');
+      const response = yield call(addAlarmRule, {...modifyRule, alarmTime});
+      if (isApiSuccess(response)) {
+        yield put({type: 'getAlarmRuleList'});
+        yield put({
+          type: 'success',
+          payload: {
+            rule: {
+              ...rule,
+              addRuleModule: false,
+              modifyRule: {
+                cmOrgunitId: '',
+                poiOrgunitId: '',
+                configType: '',
+                alarmTime: [],
+                personId: '',
+                memo: '',
+                targetName: '',
+                groupId: ''
+              }
+            }
+          }
+        });
+      } else {
+        // TODO
+      }
+    },
+    * modifyAlarmRule({ payload }, { put, call, select }) {
+      const rule = yield select(store => store.bussiness.rule);
+      const { modifyRule } = rule;
+      const alarmTime = modifyRule.alarmTime.join(',');
+      const response = yield call(modifyAlarmRule,{...modifyRule, alarmTime});
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        yield put({type: 'getAlarmRuleList'});
+        yield put({
+          type: 'success',
+          payload: {
+            rule: {
+              ...rule,
+              addRuleModule: false,
+              modifyRule: {
+                cmOrgunitId: '',
+                poiOrgunitId: '',
+                configType: '',
+                alarmTime: [],
+                personId: '',
+                memo: '',
+                targetName: '',
+                groupId: ''
+              }
+            }
+          }
+        });
+      } else {
+        // TODO
+      }
+    },
     * deleteRule({ payload }, { put, call, select }) {
       const rule = yield select(store => store.bussiness.rule);
       const {deleteRule} = rule;
@@ -665,6 +722,25 @@ export default {
         type: 'getAlarmRuleList'
       });
     },
+    * getPoiByOrgIdAndGroupId({ payload }, { put, call, select }) {
+      const rule = yield select(store => store.bussiness.rule);
+      const { orgunitId, groupId } = payload;
+      const response = yield call(getPoiByOrgIdAndGroupId, {orgunitId, groupId});
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        yield put({
+          type: 'success',
+          payload: {
+            rule: {
+              ...rule,
+              targetNameList: result
+            }
+          }
+        });
+      } else {
+        // TODO
+      }
+    }
   },
   reducers: {
     success(state, action) {

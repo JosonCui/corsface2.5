@@ -1,11 +1,12 @@
-import pathToRegexp from 'path-to-regexp/index';
 /**
  * Created by Ethan on 2018/1/10.
  */
 import React from 'react';
 import { connect } from 'dva';
-import { Checkbox, Button, notification } from 'antd';
+import { Checkbox, Button } from 'antd';
+
 import styles from './powerConfig.less';
+import {API_PREFIX} from '../../../utils/config';
 import MayLayout from '../../../components/common/Layout/MayLayout';
 import ComfirmModal from '../../../components/common/ConfirmModal/ConfirmModal';
 
@@ -159,14 +160,15 @@ class PowerConfig extends React.Component {
           {value.moduleList.length > 0 ? value.moduleList.map(item => (
             <div key={item.moduleId}>
               <div className={styles.card} onClick={this.onCheckModule.bind(this, item.moduleId)}>
-                <div className={styles.photograph}/>
+                <img className={styles.photograph} src={`${API_PREFIX}${item.icon}`} alt=""/>
                 <span className={styles.fontText}>{item.moduleName}</span>
                 <Checkbox
                   checked={this.checkBoxStatus(item.moduleId)}
                   className={styles.checkBox}
                 />
                 <div className={styles.introduce}>
-                  <span>{item.memo}</span>
+                  {/*<span className={styles.memoText}>{item.memo}</span> TODO*/}
+                  <span className={styles.memoText}>文案一般长度演示，不超过20个字符</span>
                 </div>
               </div>
             </div>

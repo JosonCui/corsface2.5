@@ -5,7 +5,6 @@ import React from 'react';
 import { connect } from 'dva';
 import { Modal, Input, TreeSelect, Select, InputNumber, Radio, Upload, Button, Icon } from 'antd';
 import styles from './Target.less';
-import rehana from '../../../assets/rehana.jpg';
 
 import { API_PREFIX } from '../../../utils/config';
 
@@ -266,9 +265,9 @@ class NewPersonModal extends React.Component {
     console.log(fileList);
     let img = '';
     img = fileList.map(value => (<div
-      className={this.cssIsSelected(value.path)}
+      className={this.cssIsSelected(value.name)}
       key={value.path}
-      onClick={this.onSelectImg.bind(this, value.path)}>
+      onClick={this.onSelectImg.bind(this, value.name)}>
       <img src={value.url} alt=""/>
     </div>
 

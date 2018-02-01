@@ -11,6 +11,13 @@ import Pagination from '../../../components/common/PaginationView/PaginationView
 const { Option, OptGroup } = Select;
 const { Column } = Table;
 class Rule extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      orgunitId: null,
+      groupId: ''
+    };
+  }
   componentDidMount() {
     this.props.dispatch({
       type: 'bussiness/getAlarmRuleList'
@@ -138,7 +145,17 @@ class Rule extends React.Component {
       payload: {
         rule: {
           ...rule,
-          addRuleModule: false
+          addRuleModule: false,
+          modifyRule: {
+            cmOrgunitId: '',
+            poiOrgunitId: '',
+            configType: '',
+            alarmTime: [],
+            personId: '',
+            memo: '',
+            targetName: '',
+            groupId: ''
+          }
         }
       }
     });
@@ -147,12 +164,12 @@ class Rule extends React.Component {
     switch (this.state.action) {
       case 'newRule':
         this.props.dispatch({
-          // type: 'system/addUser'
+          type: 'bussiness/addAlarmRule'
         });
         break;
       case 'editRule':
         this.props.dispatch({
-          // type: 'system/modifyUser'
+          type: 'bussiness/modifyAlarmRule'
         });
         break;
       default:
@@ -176,9 +193,38 @@ class Rule extends React.Component {
       }
     });
   };
+  onEditClick = record => {
+    console.log(record)
+    this.setState({
+      action: 'editRule'
+    });
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          addRuleModule: true,
+          modifyRule: {
+            ...modifyRule,
+            id: record.id,
+            cmOrgunitId: record.camera_orgunitId,
+            poiOrgunitId: record.poi_orgunitId,
+            configType: record.config_type,
+            alarmTime: record.alarm_time_int,
+            personId: '',
+            groupId: record.groupName ? record.groupName : '',
+            memo: record.memo ? record.memo : '',
+            targetName: record.poiName
+          }
+        }
+      }
+    });
+  }
   tableOperation = record => (
     <div>
-      <span title="编辑角色" className={`${styles.tableBtn} ${styles.tableEdit}`} />
+      <span title="编辑角色" onClick={this.onEditClick.bind(this, record)} className={`${styles.tableBtn} ${styles.tableEdit}`} />
       <span title="删除角色" onClick={this.onOneDeleteClick.bind(this, record)} className={`${styles.tableBtn} ${styles.tableDelete}`} />
     </div>
   );
@@ -191,6 +237,171 @@ class Rule extends React.Component {
       }
     });
   };
+
+  cameraOrgunitChange = value => {
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          modifyRule: {
+            ...modifyRule,
+            cmOrgunitId: value
+          }
+        }
+      }
+    });
+  }
+  targetOrgunitChange = value => {
+    if (value === '') {
+      this.setState({
+        orgunitId: ''
+      });
+    } else {
+      this.setState({
+        orgunitId: value
+      });
+    }
+    setTimeout(() => {
+      if (this.state.orgunitId) {
+        // 请求分组人员;
+        this.props.dispatch({
+          type: 'bussiness/getPoiByOrgIdAndGroupId',
+          payload: {
+            orgunitId: this.state.orgunitId,
+            groupId: this.state.groupId
+          }
+        });
+      }
+    }, 300);
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          modifyRule: {
+            ...modifyRule,
+            poiOrgunitId: value
+          }
+        }
+      }
+    });
+  }
+  groupChange = value => {
+    if (value === '') {
+      this.setState({
+        groupId: null
+      });
+    } else {
+      this.setState({
+        groupId: value
+      });
+    }
+    setTimeout(() => {
+      if (this.state.orgunitId && this.state.groupId) {
+        // 请求分组人员;
+        this.props.dispatch({
+          type: 'bussiness/getPoiByOrgIdAndGroupId',
+          payload: {
+            orgunitId: this.state.orgunitId,
+            groupId: this.state.groupId
+          }
+        });
+      }
+    }, 300);
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          modifyRule: {
+            ...modifyRule,
+            groupId: value
+          }
+        }
+      }
+    });
+  }
+  nameChange = value => {
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          modifyRule: {
+            ...modifyRule,
+            personId: value.personId,
+            targetName: value.name
+          }
+        }
+      }
+    });
+  }
+  disposeChange = value => {
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          modifyRule: {
+            ...modifyRule,
+            configType: value - 0
+          }
+        }
+      }
+    });
+  }
+  timeChange = value => {
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
+    const alarmTime = modifyRule.alarmTime || [];
+
+    if (alarmTime.indexOf(value - 0) === -1){
+      alarmTime.push(value - 0);
+    } else {
+      const index = alarmTime.indexOf(value - 0);
+      alarmTime.splice(index, 1);
+    }
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          modifyRule: {
+            ...modifyRule,
+            alarmTime
+          }
+        }
+      }
+    });
+  }
+  memoChange = value => {
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
+    this.props.dispatch({
+      type: 'bussiness/success',
+      payload: {
+        rule: {
+          ...rule,
+          modifyRule: {
+            ...modifyRule,
+            memo: value
+          }
+        }
+      }
+    });
+  }
+
   onComfirmSubmit = () => {
     this.props.dispatch({
       type: 'bussiness/deleteRule'
@@ -339,7 +550,21 @@ class Rule extends React.Component {
         </div>
         <AddRuleModule
           visiable={this.props.bussiness.rule.addRuleModule}
+          dataSource={this.props.bussiness.rule.modifyRule}
+          groupTree={this.props.bussiness && this.props.bussiness.groupTree ?
+            this.props.bussiness.groupTree : []}
+          targetGroupList={this.props.bussiness && this.props.bussiness.roleList ?
+            this.props.bussiness.roleList : []}
+          targerNameList={this.props.bussiness && this.props.bussiness.rule.targetNameList ?
+            this.props.bussiness.rule.targetNameList : []}
           onAddModalCancel={this.onAddModalCancel}
+          cameraOrgunitChange={this.cameraOrgunitChange}
+          targetOrgunitChange={this.targetOrgunitChange}
+          groupChange={this.groupChange}
+          nameChange={this.nameChange}
+          disposeChange={this.disposeChange}
+          timeChange={this.timeChange}
+          memoChange={this.memoChange}
           onSubmit={this.onAddSubmit}
         />
         <ComfirmModal

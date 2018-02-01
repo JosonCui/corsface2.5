@@ -2,8 +2,9 @@ import 'console-polyfill';
 import 'babel-polyfill';
 import dva from 'dva';
 import moment from 'moment';
-import {message, localeProvider} from 'antd';
+import {message} from 'antd';
 import {browserHistory} from 'dva/router';
+import { createLogger } from 'redux-logger';
 import createLoading from 'dva-loading';
 import '../reset.less';
 import '../index.less';
@@ -16,7 +17,8 @@ const app = dva({
   history: browserHistory,
   onError(error) {
     message.error(error.message);
-  }
+  },
+  onAction: createLogger({diff: true, collapsed: true})
 });
 
 // 2. Plugins
@@ -27,6 +29,7 @@ app.use(createLoading());
 app.model(require('../models/navigation'));
 app.model(require('../models/system'));
 app.model(require('../models/bussiness'));
+app.model(require('../models/basics'));
 
 // 4. Router
 app.router(require('../routers/router'));

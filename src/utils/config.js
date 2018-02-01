@@ -147,7 +147,8 @@ export default {
     alarmRuleList: `${API_PREFIX}/alarmConfig/list.do`,
     addAlarmRule: `${API_PREFIX}/alarmConfig/add.do`,
     modifyAlarmRule: `${API_PREFIX}/alarmConfig/modify.do`,
-    deleteAlarmRule: `${API_PREFIX}/alarmConfig/delete.do`
+    deleteAlarmRule: `${API_PREFIX}/alarmConfig/delete.do`,
+    getPoiByOrgIdAndGroupId: `${API_PREFIX}/alarmConfig/getPoiByOrgIdAndGroupId.do`
 
   }
 };

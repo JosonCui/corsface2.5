@@ -474,10 +474,12 @@ export default {
             }
           }
         });
-        yield put({
-          type: 'generateList',
-          payload: { data: groupTree }
-        });
+        if (groupCfg.dataList.length < 1) {
+          yield put({
+            type: 'generateList',
+            payload: { data: groupTree }
+          });
+        }
       } else {
           // TODO
       }
@@ -547,6 +549,15 @@ export default {
       const response = yield call(modifyOrgunit, params);
       if (isApiSuccess(response)) {
         const result = apiData(response);
+        this.props.dispatch({
+          type: 'success',
+          payload: {
+            groupCfg: {
+              ...groupCfg,
+              dataList: []
+            }
+          }
+        });
         yield put({
           type: 'getGroupTree'
         });
@@ -561,6 +572,15 @@ export default {
       const response = yield call(addSubOrgunit, params);
       if (isApiSuccess(response)) {
         const result = apiData(response);
+        this.props.dispatch({
+          type: 'success',
+          payload: {
+            groupCfg: {
+              ...groupCfg,
+              dataList: []
+            }
+          }
+        });
         yield put({
           type: 'getGroupTree'
         });

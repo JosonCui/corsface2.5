@@ -28,13 +28,132 @@ class MayLayout extends React.Component {
       return styles.mask;
     }
   };
+  //   navIconIsClick = (link, value) => {
+  //   const match = pathToRegexp('/:foo?/:bar?').exec(this.props.location.pathname);
+  //   if (match && match[1]) {
+  //     if (match[1] == link) {
+  //       return `${API_PREFIX}${value.checked_icon}`;
+  //     }
+  //     return `${API_PREFIX}${value.no_checked_icon}`;
+  //   }
+  // };
+  navIconClass = link => {
+    const match = pathToRegexp('/:foo?/:bar?').exec(this.props.location.pathname);
+    if (match && match[1]) {
+      if (match[1] == link) {
+        switch (link) {
+          case 'realMonitoring':
+            return `${styles.navIcon} ${styles.realMonitoring_icon_active}`;
+            break;
+          case 'realPolice':
+            return `${styles.navIcon} ${styles.realPolice_icon_active}`;
+            break;
+          case 'historyPolice':
+            return `${styles.navIcon} ${styles.historyPolice_icon_active}`;
+            break;
+          case 'historyPass':
+            return `${styles.navIcon} ${styles.historyPass_icon_active}`;
+            break;
+          case 'imgRetrieve':
+            return `${styles.navIcon} ${styles.imgRetrieve_icon_active}`;
+            break;
+          case 'faceCollection':
+            return `${styles.navIcon} ${styles.faceCollection_icon_active}`;
+            break;
+          case 'statistics':
+            return `${styles.navIcon} ${styles.statistics_icon_active}`;
+            break;
+          case 'target':
+            return `${styles.navIcon} ${styles.target_icon_active}`;
+            break;
+          case 'rule':
+            return `${styles.navIcon} ${styles.rule_icon_active}`;
+            break;
+          case 'userCfg':
+            return `${styles.navIcon} ${styles.userCfg_icon_active}`;
+            break;
+          case 'roleCfg':
+            return `${styles.navIcon} ${styles.roleCfg_icon_active}`;
+            break;
+          case 'groupCfg':
+            return `${styles.navIcon} ${styles.groupCfg_icon_active}`;
+            break;
+          case 'device':
+            return `${styles.navIcon} ${styles.device_icon_active}`;
+            break;
+          case 'powerCfg':
+            return `${styles.navIcon} ${styles.powerCfg_icon_active}`;
+            break;
+          case 'personalEdit':
+            return `${styles.navIcon} ${styles.personalEdit_icon_active}`;
+            break;
+          case 'logRecord':
+            return `${styles.navIcon} ${styles.logRecord_icon_active}`;
+            break;
+
+        }
+      }
+      switch (link) {
+        case 'realMonitoring':
+          return `${styles.navIcon} ${styles.realMonitoring_icon}`;
+          break;
+        case 'realPolice':
+          return `${styles.navIcon} ${styles.realPolice_icon}`;
+          break;
+        case 'historyPolice':
+          return `${styles.navIcon} ${styles.historyPolice_icon}`;
+          break;
+        case 'historyPass':
+          return `${styles.navIcon} ${styles.historyPass_icon}`;
+          break;
+        case 'imgRetrieve':
+          return `${styles.navIcon} ${styles.imgRetrieve_icon}`;
+          break;
+        case 'faceCollection':
+          return `${styles.navIcon} ${styles.faceCollection_icon}`;
+          break;
+        case 'statistics':
+          return `${styles.navIcon} ${styles.statistics_icon}`;
+          break;
+        case 'target':
+          return `${styles.navIcon} ${styles.target_icon}`;
+          break;
+        case 'rule':
+          return `${styles.navIcon} ${styles.rule_icon}`;
+          break;
+        case 'userCfg':
+          return `${styles.navIcon} ${styles.userCfg_icon}`;
+          break;
+        case 'roleCfg':
+          return `${styles.navIcon} ${styles.roleCfg_icon}`;
+          break;
+        case 'groupCfg':
+          return `${styles.navIcon} ${styles.groupCfg_icon}`;
+          break;
+        case 'device':
+          return `${styles.navIcon} ${styles.device_icon}`;
+          break;
+        case 'powerCfg':
+          return `${styles.navIcon} ${styles.powerCfg_icon}`;
+          break;
+        case 'personalEdit':
+          return `${styles.navIcon} ${styles.personalEdit_icon}`;
+          break;
+        case 'logRecord':
+          return `${styles.navIcon} ${styles.logRecord_icon}`;
+          break;
+
+      }
+    }
+  };
   renderNavItem = () => {
     if (this.props.navigation.navItem && this.props.navigation.navItem.length > 0) {
       return this.props.navigation.navItem.map(value =>
         <li className={styles.navItem} key={value.moduleId}>
           <Link className={styles.navLink} to={`/${value.url}`}>
             <div className={this.navItemClass(value.url)}>
-              <div className={styles.navIcon} />
+              <div className={this.navIconClass(value.url)}/>
+              {/* <img className={styles.navIcon} src={this.navIconIsClick(value.url, value)} alt=""/>*/}
               <div className={styles.text}>{ value.moduleName }</div>
             </div>
           </Link>
@@ -54,7 +173,7 @@ class MayLayout extends React.Component {
               <li className={styles.navItem}>
                 <Link className={styles.navLink} to="/">
                   <div className={this.navItemClass('/')}>
-                    <div className={styles.navIcon} />
+                    <div className={`${styles.navIcon} ${styles.nav_icon}`} />
                     <div className={styles.text}>导航页面</div>
                   </div>
                 </Link>

@@ -99,8 +99,6 @@ class PaginationView extends React.Component {
   }
 
   render() {
-    console.log(this.props.page);
-    console.log(this.state.pageSize);
     return (
       <div
         className={this.props.className ? `${this.props.className} ${styles.pagination}` : styles.pagination}

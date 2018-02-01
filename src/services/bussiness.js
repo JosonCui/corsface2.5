@@ -22,6 +22,10 @@ export async function alarmRuleList(params) {
   return request(`${config.api.alarmRuleList}?${toQueryString(params)}`);
 }
 
+export async function getPoiByOrgIdAndGroupId(params) {
+  return request(`${config.api.getPoiByOrgIdAndGroupId}?${toQueryString(params)}`);
+}
+
 export async function addCamrea(params) {
   return request(config.api.addCamrea, {
     method: 'post',

@@ -69,7 +69,7 @@ const AddUserModal = ({
         onCancel={onCancel}
         closable={false}
         width={432}
-        bodyStyle={{height: 517, border: '1px solid #02abe3'}}
+        bodyStyle={{ border: '1px solid #02abe3'}}
         className={styles.modalBody}
       >
         <div className={styles.modalHeader}>

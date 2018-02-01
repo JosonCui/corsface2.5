@@ -6,6 +6,8 @@ import { connect } from 'dva';
 import { Input, Button, Icon, Row, Col, Select, Table } from 'antd';
 import MayLayout from '../../../components/common/Layout/MayLayout';
 import FaceComparisonCard from './FaceComparisonCard';
+import PassDetailsModal from './PassDetailsModal';
+import AddTargetModal from './AddTargetModal';
 import styles from './historyPass.less';
 
 
@@ -46,6 +48,19 @@ const data = [{
   address: 'Sidney No. 1 Lake Park'
 }];
 class HistoryPass extends React.Component {
+
+  showPassDetail = () => {
+    const historyPass = this.props.basics.historyPass;
+    this.props.dispatch({
+      type: 'basics/success',
+      payload: {
+        historyPass: {
+          ...historyPass,
+          passDetailsModal: true
+        }
+      }
+    })
+  }
 
   render() {
     return (
@@ -123,25 +138,13 @@ class HistoryPass extends React.Component {
             </Col>
             <Button type="primary">查询</Button>
           </Row>
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
-          <FaceComparisonCard />
+          <FaceComparisonCard
+            onClick={this.showPassDetail}
+          />
 
         </div>
-
+        <PassDetailsModal/>
+        <AddTargetModal/>
       </MayLayout>
     );
   }
