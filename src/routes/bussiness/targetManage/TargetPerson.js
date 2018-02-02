@@ -426,7 +426,7 @@ class TargetPerson extends React.Component {
         <div className={styles.btnBar}>
           <a className={styles.delete} onClick={this.onDeleteSelectPersonBtn}>
             <i className={styles.deleteIcon} />
-            <span>删除选中用户</span>
+            <span>删除选中目标</span>
           </a>
           <Button style={{float: 'right', width: '125px'}} type="primary" onClick={this.onAddBtnClick}>
             <i className={styles.addIcon} />

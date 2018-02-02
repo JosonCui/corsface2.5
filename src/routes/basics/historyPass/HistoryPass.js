@@ -83,6 +83,10 @@ class HistoryPass extends React.Component {
               <span className={styles.label}>身份证号</span>
               <Input style={{width: 200}}/>
             </Col>
+            <Col span={4} className={styles.condition}>
+              <span className={styles.label}>摄像头</span>
+              <Input style={{width: 200}}/>
+            </Col>
 
             <Col span={3} className={styles.condition}>
               <span className={styles.label}>报警阈值</span>
@@ -90,7 +94,7 @@ class HistoryPass extends React.Component {
             </Col>
 
             <Col span={4} className={styles.condition}>
-              <span className={styles.label}>摄像头</span>
+              <span className={styles.label}>所属组织</span>
               <Input
                 style={{width: 200, marginTop: '9px'}}
                 placeholder="输入组织名称或关键字"

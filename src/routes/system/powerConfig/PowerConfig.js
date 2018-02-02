@@ -159,7 +159,7 @@ class PowerConfig extends React.Component {
           </div>
           {value.moduleList.length > 0 ? value.moduleList.map(item => (
             <div key={item.moduleId}>
-              <div className={styles.card} onClick={this.onCheckModule.bind(this, item.moduleId)}>
+              <div className={this.cssModuleCard(item.moduleId)} onClick={this.onCheckModule.bind(this, item.moduleId)}>
                 <img className={styles.photograph} src={`${API_PREFIX}${item.icon}`} alt=""/>
                 <span className={styles.fontText}>{item.moduleName}</span>
                 <Checkbox
@@ -167,7 +167,7 @@ class PowerConfig extends React.Component {
                   className={styles.checkBox}
                 />
                 <div className={styles.introduce}>
-                  {/*<span className={styles.memoText}>{item.memo}</span> TODO*/}
+                  {/* <span className={styles.memoText}>{item.memo}</span> TODO*/}
                   <span className={styles.memoText}>文案一般长度演示，不超过20个字符</span>
                 </div>
               </div>
@@ -177,6 +177,15 @@ class PowerConfig extends React.Component {
       ));
     }
     return mod;
+  }
+  cssModuleCard = id => {
+    if (this.props.system.powerCfg.bindRoleModuleParams && this.props.system.powerCfg.bindRoleModuleParams.moduleId) {
+      if (this.props.system.powerCfg.bindRoleModuleParams.moduleId.indexOf(id) !== -1) {
+        return `${styles.card} ${styles.cardSelected}`;
+      }
+      return styles.card;
+    }
+    return styles.card;
   }
 
 
@@ -194,12 +203,12 @@ class PowerConfig extends React.Component {
             <span>第二步:选择权限</span>
           </div>
           {this.renderModels()}
+          <div className={styles.btnWrap}>
+            <Button style={{width: '110px'}} type="primary" onClick={this.onComfirmSubmit}>保存配置</Button>
+            <Button style={{width: '110px', marginLeft: '20px'}} onClick={this.onReset} type="primary" ghost>清空选择</Button>
+          </div>
+        </div>
 
-        </div>
-        <div className={styles.btnWrap}>
-          <Button style={{width: '110px'}} type="primary" onClick={this.onComfirmSubmit}>保存配置</Button>
-          <Button style={{width: '110px', marginLeft: '20px'}} onClick={this.onReset} type="primary" ghost>清空选择</Button>
-        </div>
 
         <ComfirmModal
           visiable={this.props.system.confirmVisiable}

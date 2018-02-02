@@ -57,14 +57,20 @@ class PassDetailsModal extends React.Component {
                 <img className={styles.imgList} src={testImg} alt=""/>
                 <img className={styles.imgList} src={testImg} alt=""/>
                 <img className={styles.imgList} src={testImg} alt=""/>
-                <div className={styles.imgList}>
-                  <p>李寻欢</p>
-                  <p>41252236523552234</p>
-                </div>
-                <div>
-                  <Button style={{marginLeft: '33%'}} type="primary">删除选中</Button>
-                  <div className={styles.reminderFont} >选中不清晰图片可将其删除</div>
-                </div>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+              </div>
+              <div className={styles.imgList}>
+                <p>李寻欢</p>
+                <p>41252236523552234</p>
+              </div>
+              <div>
+                <Button style={{marginLeft: '33%'}} type="primary">删除选中</Button>
+                <div className={styles.reminderFont} >选中不清晰图片可将其删除</div>
               </div>
             </Col>
             <Col span={7} className={styles.wrap}>

@@ -98,9 +98,12 @@ export const CAMERA_CONFIG = '{\n' +
 
 export default {
   api: {
+      // 登陆onLogin
+    onLogin: `${API_PREFIX}/logon.do`,
     // 导航模块
     navList: `${API_PREFIX}/navigation/getNavigationList.do`,
     getSubModule: `${API_PREFIX}/module/getSubModuleByRlIdAndMdId.do`,
+      getRoleByUserName: `${API_PREFIX}/mqrole/getRoleByUserName.do`,
     // 用户模块
     getUserList: `${API_PREFIX}/scuser/list.do`,
     addUser: `${API_PREFIX}/scuser/add.do`,

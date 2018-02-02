@@ -11,3 +11,6 @@ export async function navList(params) {
 export async function getSubModule(params) {
   return request(`${config.api.getSubModule}?${toQueryString(params)}`);
 }
+export async function getRoleByUserName(params) {
+  return request(`${config.api.getRoleByUserName}?${toQueryString(params)}`);
+}

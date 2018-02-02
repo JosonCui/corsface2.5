@@ -25,7 +25,6 @@ function RouterConfig({ history }) {
         <Route exact path="/" component={NavigationPage}/>
 
         {/* 系统管理 */}
-        <Route exact path="/login" component={login}/>
         <Route exact path="/userCfg" component={UserCfg}/>
         <Route exact path="/roleCfg" component={RoleCfg}/>
         <Route exact path="/groupCfg" component={GroupCfg}/>

@@ -241,7 +241,7 @@ class TargetGroup extends React.Component {
         <div className={styles.btnBar}>
           <a className={styles.delete} onClick={this.onDeleteSelectGroupBtn}>
             <i className={styles.deleteIcon} />
-            <span>删除选中用户</span>
+            <span>删除选中分组</span>
           </a>
           <Button style={{float: 'right', width: '125px'}} type="primary" onClick={this.onAddBtnClick}>
             <i className={styles.addIcon} />

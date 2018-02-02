@@ -4,6 +4,9 @@ import dva from 'dva';
 import {message} from 'antd';
 import {hashHistory} from 'dva/router';
 import createLoading from 'dva-loading';
+import '../reset.less';
+import '../index.less';
+
 import '../login.less';
 
 // 1. Initialize
@@ -19,12 +22,11 @@ const app = dva({
 app.use(createLoading());
 
 
-
 // 3. Model
-// app.model(require('../models/login'));
+app.model(require('../models/login'));
 
 // 4. Router
-// app.router(require('../routers/loginRouter'));
+app.router(require('../routers/loginRouter'));
 
 // 5. Start
 app.start('#root');

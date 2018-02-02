@@ -288,7 +288,27 @@ export default {
     },
     * bindRoleModule({ payload }, { put, call, select }) {
       const powerCfg = yield select(store => store.system.powerCfg);
-      const { bindRoleModuleParams } = powerCfg;
+      const { bindRoleModuleParams, moduleList } = powerCfg;
+
+      moduleList.map((value, index) => {
+        let flag = false;
+        console.log(bindRoleModuleParams.moduleId);
+        moduleList[index].moduleList.map(item => {
+          console.log(moduleList[index].moduleList);
+          if (bindRoleModuleParams.moduleId.indexOf(item.moduleId) !== -1) {
+            flag = true;
+            if (bindRoleModuleParams.moduleId.indexOf(moduleList[index].moduleId) === -1) {
+              console.log(moduleList[index].moduleId);
+              return bindRoleModuleParams.moduleId.push(moduleList[index].moduleId);
+            }
+          }
+          if (!flag) {
+            if (bindRoleModuleParams.moduleId.indexOf(moduleList[index].moduleId) !== -1) {
+                bindRoleModuleParams.moduleId = bindRoleModuleParams.moduleId.slice(bindRoleModuleParams.moduleId.indexOf(moduleList[index].moduleId), 1);
+            }
+          }
+        });
+      });
       const moduleIds = bindRoleModuleParams.moduleId.join(',');
       if (moduleIds === '') {
         return false;// modal
@@ -354,7 +374,7 @@ export default {
       modifyUser.orgunitId -= 0;
       const { password } = modifyUser;
       const pwdMD5 = MD5(password).toString();
-      const response = yield call(addUser, {...modifyUser, password: pwdMD5, phone: '18519334233'});
+      const response = yield call(addUser, {...modifyUser, password: pwdMD5});
       if (isApiSuccess(response)) {
         yield put({type: 'getUserList'});
         yield put({
@@ -385,7 +405,9 @@ export default {
     * modifyUser({ payload }, { put, call, select }) {
       const userCfg = yield select(store => store.system.userCfg);
       const { modifyUser } = userCfg;
-      const response = yield call(editUser, modifyUser);
+      const { password } = modifyUser;
+      const pwdMD5 = MD5(password).toString();
+      const response = yield call(editUser, {...modifyUser, password: pwdMD5});
       if (isApiSuccess(response)) {
         yield put({type: 'getUserList'});
         yield put({
@@ -549,7 +571,7 @@ export default {
       const response = yield call(modifyOrgunit, params);
       if (isApiSuccess(response)) {
         const result = apiData(response);
-        this.props.dispatch({
+        yield put({
           type: 'success',
           payload: {
             groupCfg: {
@@ -572,7 +594,7 @@ export default {
       const response = yield call(addSubOrgunit, params);
       if (isApiSuccess(response)) {
         const result = apiData(response);
-        this.props.dispatch({
+        yield put({
           type: 'success',
           payload: {
             groupCfg: {

@@ -2,7 +2,7 @@
  * Created by Ethan on 2018/2/1.
  */
 import React from 'react';
-import { Modal, Row, Col, Button } from 'antd';
+import { Modal, Row, Col, Button, Input,Select } from 'antd';
 import {connect} from 'dva';
 import styles from './historyPass.less';
 import testImg from '../../../assets/gyc.jpg';
@@ -45,14 +45,22 @@ class AddTargetModal extends React.Component {
                 <img className={styles.imgList} src={testImg} alt=""/>
                 <img className={styles.imgList} src={testImg} alt=""/>
                 <img className={styles.imgList} src={testImg} alt=""/>
-                <div className={styles.imgList}>
-                  <p>李寻欢</p>
-                  <p>41252236523552234</p>
-                </div>
-                <div>
-                  <Button style={{marginLeft: '33%'}} type="primary">删除选中</Button>
-                  <div className={styles.reminderFont} >选中不清晰图片可将其删除</div>
-                </div>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+                <img className={styles.imgList} src={testImg} alt=""/>
+
+              </div>
+              <div className={styles.imgList}>
+                <p>李寻欢</p>
+                <p>41252236523552234</p>
+              </div>
+              <div>
+                <Button style={{marginLeft: '33%'}} type="primary">删除选中</Button>
+                <div className={styles.reminderFont} >选中不清晰图片可将其删除</div>
               </div>
             </Col>
             <Col span={16} className={styles.wrap}>
@@ -62,13 +70,56 @@ class AddTargetModal extends React.Component {
               </div>
               <div>
                 <img className={styles.sceneImg} src={sceneImg} alt=""/>
-                <div className={styles.relevance}>
-                  <Button style={{marginLeft: '33%'}} type="primary">关联目标</Button>
-                  <div className={styles.reminderFont} >将抓拍序列和目标照片关联,可提高识别率</div>
+                <div className={styles.modalInput}>
+                  <div className={styles.formItem}>
+                    <label className={styles.fromlabel}>姓名：</label>
+                    <Input type="text" style={{width: '150px'}} size="small"/>
+                  </div>
+                  <div className={styles.formItem}>
+                    <label className={styles.fromlabel}>身份证号：</label>
+                    <Input type="text" style={{width: '150px'}} size="small"/>
+                  </div>
+                  <div className={styles.formItem}>
+                    <label className={styles.fromlabel}>所属分组：</label>
+                    <Select
+                      style={{
+                        width: '150px'
+                      }}
+                      size="small"
+                      // onChange={this.onSelectGroupChange}
+                    >
+                      <Option value="">全部</Option>
+                      {/*{this.renderSelectOptions()}*/}
+
+                    </Select>
+                  </div>
                 </div>
-                <div className={styles.addNew}>
-                  <Button onClick={this.addTarget} style={{marginLeft: '33%'}} type="primary">新增目标</Button>
-                  <div className={styles.reminderFont} >将抓拍序列作为人脸图片进行新增目标</div>
+                <div className={styles.modalInput}>
+                  <div className={styles.formItem}>
+                    <label className={styles.fromlabel}>性别：</label>
+                    <Select
+                      style={{
+                        width: '150px'
+                      }}
+                      size="small"
+                      // onChange={this.onSelectGroupChange}
+                    >
+                      <Option value="1">男</Option>
+                      <Option value="2">女</Option>
+                    </Select>
+                  </div>
+                  <div className={styles.formItem}>
+                    <label className={styles.fromlabel}>户籍：</label>
+                    <Input type="text" style={{width: '150px'}} size="small"/>
+                  </div>
+                  <div className={styles.formItem}>
+                    <label className={styles.fromlabel}>阈值：</label>
+                    <Input type="text" style={{width: '150px'}} size="small"/>
+                  </div>
+                </div>
+                <div>
+                  <Button onClick={this.addTarget} style={{marginLeft: '43%'}} type="primary">新增目标</Button>
+
                 </div>
               </div>
             </Col>
