@@ -7,16 +7,20 @@ import { Modal, Button, Input, Select, Icon, Row} from 'antd';
 import styles from './roleConfig.less';
 
 const { TextArea } = Input;
+const Option = Select.Option;
 
 
 const AddRoleModal = ({
-  visiable, onAddModalCancel, dataSource, roleNameChange, roleMemoChange, onSubmit }) => {
-
+  visiable, onAddModalCancel, dataSource, roleNameChange, roleMemoChange, onSubmit, subModules,
+        moduleIdChange}) => {
   function onCancel() {
     onAddModalCancel();
   }
   function onRoleNameChange(e) {
     roleNameChange(e.target.value);
+  }
+  function onModuleIdChange(value) {
+    moduleIdChange(value);
   }
   function onRoleMemoChange(e) {
     roleMemoChange(e.target.value);
@@ -40,8 +44,15 @@ const AddRoleModal = ({
           <span className={styles.modalHeaderTitle}>新建角色</span>
         </div>
         <div className={styles.serchWrap}>
-          <div className={styles.text}>角色名称</div>
+          <div className={styles.text}>*角色名称</div>
           <Input className={styles.input} value={dataSource.name} onChange={onRoleNameChange}/>
+        </div>
+        <div className={styles.serchWrap}>
+          <div className={styles.text}>*默认模块</div>
+          <Select className={styles.input} value={dataSource.moduleId} onChange={onModuleIdChange}>
+            {subModules.map(value =>
+              <Option value={value.moduleId} key={value.moduleId}>{value.moduleName}</Option>)}
+          </Select>
         </div>
         <div className={styles.serchWrap}>
           <div className={styles.text}>备注</div>

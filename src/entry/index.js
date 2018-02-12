@@ -17,8 +17,7 @@ const app = dva({
   history: browserHistory,
   onError(error) {
     message.error(error.message);
-  },
-  onAction: createLogger({diff: true, collapsed: true})
+  }
 });
 
 // 2. Plugins
@@ -26,6 +25,7 @@ app.use(createLoading());
 
 // 3. Model
 
+app.model(require('../models/index'));
 app.model(require('../models/navigation'));
 app.model(require('../models/system'));
 app.model(require('../models/bussiness'));

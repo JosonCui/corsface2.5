@@ -19,7 +19,8 @@ import {
   addAlarmRule,
   modifyAlarmRule,
   deleteAlarmRule,
-  getPoiByOrgIdAndGroupId
+  getPoiByOrgIdAndGroupId,
+  getGroupListAll
   } from '../services/bussiness';
 import { getAllRoles, getGroupTree } from '../services/system';
 import { isApiSuccess, apiData } from '../utils/utils';
@@ -143,12 +144,12 @@ export default {
       modifyRule: {
         cmOrgunitId: '',
         poiOrgunitId: '',
+        poiGroupId: '',
         configType: '',
-        alarmTime: [],
+        alarmTime: [0],
         personId: '',
         memo: '',
-        targetName: '',
-        groupId: ''
+        targetName: ''
       },
       deleteRule: {
         id: ''
@@ -633,8 +634,9 @@ export default {
               modifyRule: {
                 cmOrgunitId: '',
                 poiOrgunitId: '',
+                poiGroupId: '',
                 configType: '',
-                alarmTime: [],
+                alarmTime: [0],
                 personId: '',
                 memo: '',
                 targetName: '',
@@ -651,7 +653,7 @@ export default {
       const rule = yield select(store => store.bussiness.rule);
       const { modifyRule } = rule;
       const alarmTime = modifyRule.alarmTime.join(',');
-      const response = yield call(modifyAlarmRule,{...modifyRule, alarmTime});
+      const response = yield call(modifyAlarmRule, {...modifyRule, alarmTime});
       if (isApiSuccess(response)) {
         const result = apiData(response);
         yield put({type: 'getAlarmRuleList'});
@@ -664,12 +666,12 @@ export default {
               modifyRule: {
                 cmOrgunitId: '',
                 poiOrgunitId: '',
+                poiGroupId: '',
                 configType: '',
-                alarmTime: [],
+                alarmTime: [0],
                 personId: '',
                 memo: '',
-                targetName: '',
-                groupId: ''
+                targetName: ''
               }
             }
           }
@@ -724,8 +726,12 @@ export default {
     },
     * getPoiByOrgIdAndGroupId({ payload }, { put, call, select }) {
       const rule = yield select(store => store.bussiness.rule);
-      const { orgunitId, groupId } = payload;
-      const response = yield call(getPoiByOrgIdAndGroupId, {orgunitId, groupId});
+      const orgunitId = rule.modifyRule.poiOrgunitId;
+      const poiGroupId = rule.modifyRule.poiGroupId;
+      if (!orgunitId || !poiGroupId) {
+        return false;
+      }
+      const response = yield call(getPoiByOrgIdAndGroupId, {orgunitId, poiGroupId});
       if (isApiSuccess(response)) {
         const result = apiData(response);
         yield put({

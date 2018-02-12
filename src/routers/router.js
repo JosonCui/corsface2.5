@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Route } from 'dva/router';
+import IndexPage from '../routes/IndexPage/IndexPage';
 import NavigationPage from '../routes/navigation/IndexPage';
 
 import UserCfg from '../routes/system/userConfig/UserConfig';
@@ -15,14 +16,14 @@ import RealPolice from '../routes/basics/realPolice/RealPolice';
 import Device from '../routes/bussiness/device/Device';
 import Target from '../routes/bussiness/targetManage/Target';
 import Rule from '../routes/bussiness/rule/Rule';
-import login from '../routes/login/Login';
 
 
 function RouterConfig({ history }) {
   return (
     <Router history={history}>
       <div style={{height: '100%'}}>
-        <Route exact path="/" component={NavigationPage}/>
+        <Route exact path="/" component={IndexPage}/>
+        <Route exact path="/nav" component={NavigationPage}/>
 
         {/* 系统管理 */}
         <Route exact path="/userCfg" component={UserCfg}/>

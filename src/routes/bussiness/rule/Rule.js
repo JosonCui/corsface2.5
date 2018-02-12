@@ -15,7 +15,7 @@ class Rule extends React.Component {
     super(props);
     this.state = {
       orgunitId: null,
-      groupId: ''
+      poiGroupId: ''
     };
   }
   componentDidMount() {
@@ -26,8 +26,9 @@ class Rule extends React.Component {
       type: 'bussiness/getGroupTree'
     });
     this.props.dispatch({
-      type: 'bussiness/getAllRoles'
+      type: 'bussiness/getAllGroups'
     });
+
   }
   onSearchName = e => {
     const rule = this.props.bussiness.rule;
@@ -71,9 +72,9 @@ class Rule extends React.Component {
   };
   renderSelectOptions = () => {
     let op = '';
-    if (this.props.bussiness && this.props.bussiness.roleList) {
-      if (this.props.bussiness.roleList.length > 0) {
-        op = this.props.bussiness.roleList.map(value => (
+    if (this.props.bussiness && this.props.bussiness.poiGroup) {
+      if (this.props.bussiness.poiGroup.allGroups.length > 0) {
+        op = this.props.bussiness.poiGroup.allGroups.map(value => (
           <Option value={value.id} key={value.id}>{value.name}</Option>
         ));
       }
@@ -93,7 +94,7 @@ class Rule extends React.Component {
             ...getRuleParams,
             pageSize: 10,
             pageNo: 1,
-            groupId: value
+            poiGroupId: value
           }
         }
       }
@@ -150,11 +151,11 @@ class Rule extends React.Component {
             cmOrgunitId: '',
             poiOrgunitId: '',
             configType: '',
-            alarmTime: [],
+            alarmTime: [0],
             personId: '',
             memo: '',
             targetName: '',
-            groupId: ''
+            poiGroupId: ''
           }
         }
       }
@@ -194,12 +195,12 @@ class Rule extends React.Component {
     });
   };
   onEditClick = record => {
-    console.log(record)
+    const rule = this.props.bussiness.rule;
+    const { modifyRule } = rule;
     this.setState({
       action: 'editRule'
     });
-    const rule = this.props.bussiness.rule;
-    const { modifyRule } = rule;
+
     this.props.dispatch({
       type: 'bussiness/success',
       payload: {
@@ -213,13 +214,15 @@ class Rule extends React.Component {
             poiOrgunitId: record.poi_orgunitId,
             configType: record.config_type,
             alarmTime: record.alarm_time_int,
-            personId: '',
-            groupId: record.groupName ? record.groupName : '',
-            memo: record.memo ? record.memo : '',
-            targetName: record.poiName
+            personId: record.personId,
+            poiGroupId: record.groupId,
+            memo: record.memo
           }
         }
       }
+    });
+    this.props.dispatch({
+      type: 'bussiness/getPoiByOrgIdAndGroupId'
     });
   }
   tableOperation = record => (
@@ -255,27 +258,15 @@ class Rule extends React.Component {
     });
   }
   targetOrgunitChange = value => {
-    if (value === '') {
-      this.setState({
-        orgunitId: ''
-      });
-    } else {
-      this.setState({
-        orgunitId: value
-      });
-    }
-    setTimeout(() => {
-      if (this.state.orgunitId) {
-        // 请求分组人员;
-        this.props.dispatch({
-          type: 'bussiness/getPoiByOrgIdAndGroupId',
-          payload: {
-            orgunitId: this.state.orgunitId,
-            groupId: this.state.groupId
-          }
-        });
-      }
-    }, 300);
+    // if (value === '') {
+    //   this.setState({
+    //     orgunitId: ''
+    //   });
+    // } else {
+    //   this.setState({
+    //     orgunitId: value
+    //   });
+    // }
     const rule = this.props.bussiness.rule;
     const { modifyRule } = rule;
     this.props.dispatch({
@@ -285,36 +276,29 @@ class Rule extends React.Component {
           ...rule,
           modifyRule: {
             ...modifyRule,
-            poiOrgunitId: value
+            poiOrgunitId: value,
+            personId: ''
           }
         }
       }
+    });
+      // 请求分组人员;
+    this.props.dispatch({
+      type: 'bussiness/getPoiByOrgIdAndGroupId'
     });
   }
   groupChange = value => {
-    if (value === '') {
-      this.setState({
-        groupId: null
-      });
-    } else {
-      this.setState({
-        groupId: value
-      });
-    }
-    setTimeout(() => {
-      if (this.state.orgunitId && this.state.groupId) {
-        // 请求分组人员;
-        this.props.dispatch({
-          type: 'bussiness/getPoiByOrgIdAndGroupId',
-          payload: {
-            orgunitId: this.state.orgunitId,
-            groupId: this.state.groupId
-          }
-        });
-      }
-    }, 300);
     const rule = this.props.bussiness.rule;
     const { modifyRule } = rule;
+    // if (value === '') {
+    //   this.setState({
+    //     poiGroupId: null
+    //   });
+    // } else {
+    //   this.setState({
+    //     poiGroupId: value
+    //   });
+    // }
     this.props.dispatch({
       type: 'bussiness/success',
       payload: {
@@ -322,13 +306,19 @@ class Rule extends React.Component {
           ...rule,
           modifyRule: {
             ...modifyRule,
-            groupId: value
+            poiGroupId: value,
+            personId: ''
           }
         }
       }
     });
+        // 请求分组人员;
+    this.props.dispatch({
+      type: 'bussiness/getPoiByOrgIdAndGroupId'
+    });
   }
   nameChange = value => {
+    console.log(value);
     const rule = this.props.bussiness.rule;
     const { modifyRule } = rule;
     this.props.dispatch({
@@ -338,8 +328,7 @@ class Rule extends React.Component {
           ...rule,
           modifyRule: {
             ...modifyRule,
-            personId: value.personId,
-            targetName: value.name
+            personId: value
           }
         }
       }
@@ -364,9 +353,9 @@ class Rule extends React.Component {
   timeChange = value => {
     const rule = this.props.bussiness.rule;
     const { modifyRule } = rule;
-    const alarmTime = modifyRule.alarmTime || [];
+    const alarmTime = modifyRule.alarmTime || [0];
 
-    if (alarmTime.indexOf(value - 0) === -1){
+    if (alarmTime.indexOf(value - 0) === -1) {
       alarmTime.push(value - 0);
     } else {
       const index = alarmTime.indexOf(value - 0);
@@ -553,8 +542,8 @@ class Rule extends React.Component {
           dataSource={this.props.bussiness.rule.modifyRule}
           groupTree={this.props.bussiness && this.props.bussiness.groupTree ?
             this.props.bussiness.groupTree : []}
-          targetGroupList={this.props.bussiness && this.props.bussiness.roleList ?
-            this.props.bussiness.roleList : []}
+          targetGroupList={this.props.bussiness && this.props.bussiness.poiGroup.allGroups ?
+            this.props.bussiness.poiGroup.allGroups : []}
           targerNameList={this.props.bussiness && this.props.bussiness.rule.targetNameList ?
             this.props.bussiness.rule.targetNameList : []}
           onAddModalCancel={this.onAddModalCancel}

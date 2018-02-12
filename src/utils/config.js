@@ -98,12 +98,14 @@ export const CAMERA_CONFIG = '{\n' +
 
 export default {
   api: {
+      // 首页默认module接口
+    getIshomeModuleByRid: `${API_PREFIX}//mqrole/getIshomeModuleByRid.do`,
       // 登陆onLogin
     onLogin: `${API_PREFIX}/logon.do`,
     // 导航模块
     navList: `${API_PREFIX}/navigation/getNavigationList.do`,
     getSubModule: `${API_PREFIX}/module/getSubModuleByRlIdAndMdId.do`,
-      getRoleByUserName: `${API_PREFIX}/mqrole/getRoleByUserName.do`,
+    getRoleByUserName: `${API_PREFIX}/mqrole/getRoleByUserName.do`,
     // 用户模块
     getUserList: `${API_PREFIX}/scuser/list.do`,
     addUser: `${API_PREFIX}/scuser/add.do`,
@@ -151,7 +153,17 @@ export default {
     addAlarmRule: `${API_PREFIX}/alarmConfig/add.do`,
     modifyAlarmRule: `${API_PREFIX}/alarmConfig/modify.do`,
     deleteAlarmRule: `${API_PREFIX}/alarmConfig/delete.do`,
-    getPoiByOrgIdAndGroupId: `${API_PREFIX}/alarmConfig/getPoiByOrgIdAndGroupId.do`
+    getPoiByOrgIdAndGroupId: `${API_PREFIX}/alarmConfig/getPoiByOrgIdAndGroupId.do`,
+    getGroupListAll: `${API_PREFIX}/group/listAll.do`,
+
+    // 通过历史
+    historyPassList: `${API_PREFIX}/facetrackHistory/passList.do`,
+    gitALLCamreaList: `${API_PREFIX}/camrea/listAll.do`,
+    deleteTakeImgs: `${API_PREFIX}/facetrackHistory/removeFaceImg.do`,
+    bindFacetrackApi: `${API_PREFIX}/poi/bindFacetrack.do`,
+    addByFacetrack: `${API_PREFIX}/poi/addByFacetrack.do`,
+      // 报警历史
+    alarmList: `${API_PREFIX}/alarmHistory/alarmList.do`
 
   }
 };

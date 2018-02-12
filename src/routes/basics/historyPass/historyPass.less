@@ -81,9 +81,33 @@ p{
   height: 70%;
   overflow: auto;
 }
+.contentTwo{
+  height: 92%;
+  overflow: auto;
+}
 .imgList{
-  margin: 16px 0 0 16px;
+  margin-left: 16px;
   color: #ffffff;
+}
+.selectImg{
+  width: 110px;
+  height: 110px;
+  display: inline-block;
+  border: 2px solid @cf-border-color;
+  cursor: pointer;
+  margin: 12px 9px 0px 12px;
+}
+.selectImg img{
+  width: 106px;
+  height: 106px;
+}
+.notSelectImg{
+  width: 119px;
+  height: 119px;
+  box-sizing: border-box;
+  display: inline-block;
+  cursor: pointer;
+  margin: 12px 0px 0px 12px;
 }
 .messageCard{
   margin: 16px;
@@ -91,6 +115,17 @@ p{
   height: 113px;
   background-color: @cf-card-color;
   .border;
+  cursor: pointer;
+}
+.selectesCard{
+  margin: 16px;
+  width: 340px;
+  height: 113px;
+  background-color: #164455;
+  .border;
+  cursor: pointer;
+  box-shadow: #02abe3 0 0 1px 2px;
+
 }
 .reminderFont{
   text-align: center;
@@ -140,3 +175,21 @@ p{
   text-align: right;
   color: #01ACE4;
 }
+.ku_icon{
+  position: relative;
+  bottom: 27px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  background: url("../../../assets/ku.png") no-repeat;
+  background-size: 24px 24px;
+}
+.pagination{
+  position: absolute;
+  left: 60px;
+  bottom: 30px;
+  width: calc(~'100% - 165px');
+  height: 32px;
+  color: @cf-border-color;
+}
+

@@ -4,6 +4,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import MayLayout from '../../../components/common/Layout/MayLayout';
+import RealPoliceCard from './RealPoliceCard';
 import styles from './realPolice.less';
 
 class RealPolice extends React.Component {
@@ -11,7 +12,9 @@ class RealPolice extends React.Component {
   render() {
     return (
       <MayLayout location={this.props.location}>
-        <div>RealPolice</div>
+        <RealPoliceCard />
+        <RealPoliceCard />
+        <RealPoliceCard />
       </MayLayout>
     );
   }

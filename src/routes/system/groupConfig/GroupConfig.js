@@ -326,6 +326,14 @@ class GroupConfig extends React.Component {
     }
     return parentKey;
   };
+
+    parentClassName = (id) => {
+      if(this.state.expandedKeys.indexOf(`${id}`) === -1){
+        return styles.treeNode
+      }else{
+        return styles.treeNode_open
+      }
+    };
   // 生成树
   renderTreeNode = data => data.map(item => {
     const index = item.title.indexOf(this.state.searchValue);
@@ -340,13 +348,33 @@ class GroupConfig extends React.Component {
             ) : <span>{item.title}</span>;
     if (item.children) {
       return (
-        <TreeNode key={item.id} title={title}>
+        <TreeNode key={item.id} title={<div><i className={this.parentClassName(item.id)}></i>{title}{"  "}{ "("+ item.children.length + ")" }</div>}>
           {this.renderTreeNode(item.children)}
         </TreeNode>
       );
-    }
-    return <TreeNode key={item.id} title={title} />;
+    }else if (item.cameras) {
+          return (
+                  <TreeNode key={item.id} title={<div><i className={this.parentClassName(item.id)}></i>{title}{"  "}{ "("+ item.cameras.length + ")" }</div>}>
+                      {this.renderCameraNode(item.cameras)}
+                  </TreeNode>
+          );
+      }
+    return <TreeNode key={item.id} title={<div><i className={styles.treeNode}></i>{title}</div>} />;
   });
+
+    renderCameraNode = data => data.map(item => {
+        const index = item.name.indexOf(this.state.searchValue);
+        const beforeStr = item.name.substr(0, index);
+        const afterStr = item.name.substr(index + this.state.searchValue.length);
+        const title = index > -1 ? (
+                        <span>
+        {beforeStr}
+                          <span style={{ color: '#f50' }}>{this.state.searchValue}</span>
+                            {afterStr}
+      </span>
+                ) : <span>{item.name}</span>;
+        return <TreeNode key={item.playUrl} title={<div>{title}</div>} />;
+    });
 
   // 新增/ 修改页面切换
   isOrgunitShow = isShow => {

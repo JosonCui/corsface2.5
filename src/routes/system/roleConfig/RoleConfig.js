@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { Select, Button, Table } from 'antd';
 
-import {ROLE_CONFIG_PAGE_SIZE} from '../../../utils/config'
+import {ROLE_CONFIG_PAGE_SIZE} from '../../../utils/config';
 import MayLayout from '../../../components/common/Layout/MayLayout';
 import ComfirmModal from '../../../components/common/ConfirmModal/ConfirmModal';
 import Pagination from '../../../components/common/PaginationView/PaginationView';
@@ -97,6 +97,23 @@ class RoleConfig extends React.Component {
       }
     });
   };
+  onRoleModuleIdChange = val => {
+    const roleCfg = this.props.system.roleCfg;
+    const { modifyRole } = roleCfg;
+    this.props.dispatch({
+      type: 'system/success',
+      payload: {
+        roleCfg: {
+          ...roleCfg,
+          modifyRole: {
+            ...modifyRole,
+            moduleId: val
+          }
+        }
+      }
+    });
+  };
+
   onRoleMemoChange = val => {
     const roleCfg = this.props.system.roleCfg;
     const { modifyRole } = roleCfg;
@@ -149,7 +166,8 @@ class RoleConfig extends React.Component {
             ...modifyRole,
             id: record.roleId,
             name: record.roleName,
-            memo: record.memo
+            memo: record.memo,
+            moduleId: record.initModuleId
           }
 
         }
@@ -258,6 +276,10 @@ class RoleConfig extends React.Component {
                 title="角色名称"
                 dataIndex="roleName"
                 key="roleName"/>
+              {/* <Column*/}
+              {/* title=""*/}
+              {/* dataIndex="userCount"*/}
+              {/* key="userCount"/>*/}
               <Column
                 title="用户数"
                 dataIndex="userCount"
@@ -284,6 +306,8 @@ class RoleConfig extends React.Component {
           dataSource={this.props.system.roleCfg.modifyRole}
           roleNameChange={this.onRoleNameChange}
           roleMemoChange={this.onRoleMemoChange}
+          moduleIdChange={this.onRoleModuleIdChange}
+          subModules={this.props.system.roleCfg.subModules}
           onSubmit={this.onAddRoleSubmit}
         />
         <ComfirmModal

@@ -31,7 +31,6 @@ const GroupMsg = ({ dataSource, onNameChange, onMemoChange, onCoordinateChange, 
   function onDeleteClick(id) {
     onDelete(id);
   }
-  console.log(orgunitList);
   return (
     <div className={styles.groupMsgContain}>
       <div className={styles.groupMsgTitle}>组织信息</div>

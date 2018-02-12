@@ -35,7 +35,14 @@ class PowerConfig extends React.Component {
   onCheckModule = id => {
     const powerCfg = this.props.system.powerCfg;
     const {bindRoleModuleParams} = powerCfg;
+
     const moduleId = bindRoleModuleParams.moduleId || [];
+    if (powerCfg.initModuleId && powerCfg.initModuleId.length > 0) {
+      if (powerCfg.initModuleId[0].moduleId === id) {
+        alert('默认模块无法更改！');
+        return false;
+      }
+    }
 
     if (moduleId.indexOf(id) === -1) {
       moduleId.push(id);
@@ -163,6 +170,8 @@ class PowerConfig extends React.Component {
                 <img className={styles.photograph} src={`${API_PREFIX}${item.icon}`} alt=""/>
                 <span className={styles.fontText}>{item.moduleName}</span>
                 <Checkbox
+                  disabled={this.props.system.powerCfg.initModuleId && this.props.system.powerCfg.initModuleId.length > 0 ?
+                          this.props.system.powerCfg.initModuleId[0].moduleId === item.moduleId : false}
                   checked={this.checkBoxStatus(item.moduleId)}
                   className={styles.checkBox}
                 />

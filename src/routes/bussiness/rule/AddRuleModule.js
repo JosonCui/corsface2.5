@@ -30,6 +30,7 @@ const AddRuleModule = ({ visiable,
     cameraOrgunitChange(value);
   }
   function onTargetOrgunitChange(value) {
+    console.log(value)
     targetOrgunitChange(value);
   }
   function onGroupChange(value) {
@@ -48,10 +49,14 @@ const AddRuleModule = ({ visiable,
     let op = '';
     if (targerNameList) {
       op = targerNameList.map(value => (
-        <Option value={value} key={value.id}>{value.name}</Option>
+        <Option value={value.personId} key={value.id}>{value.name}</Option>
       ));
+      return op;
+    } else {
+      op = ''
+      return op;
     }
-    return op;
+
   }
   function onNameChange(value) {
     nameChange(value);
@@ -117,7 +122,7 @@ const AddRuleModule = ({ visiable,
           <Select
             className={styles.input}
             onChange={onGroupChange}
-            value={dataSource.groupId}
+            value={dataSource.poiGroupId}
           >
             {onrenderSelectOptions()}
           </Select>
@@ -130,8 +135,9 @@ const AddRuleModule = ({ visiable,
             optionFilterProp="children"
             className={styles.input}
             onChange={onNameChange}
-            value={dataSource.targetName}
+            value={dataSource.personId}
           >
+            {/*<Option value="">全部</Option>*/}
             {onrenderTargerNameList()}
           </Select>
         </div>

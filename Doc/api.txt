@@ -418,6 +418,7 @@
           参数      必选
                     cmOrgunitId        int         摄像头所属组织id
                     poiOrgunitId       int         目标人所属组织id
+                    poiGroupId         int         目标人所属分组id
                     configType         int        提示方式(0-报警,1-通过)
                     alarmTime          string      报警时间   （报警时间0-每天，1-7表示星期，多个以逗号隔开）
 
@@ -433,6 +434,7 @@
                         id                int          规则ID
                        cmOrgunitId        int         摄像头所属组织id
                        poiOrgunitId       int         目标人所属组织id
+                       poiGroupId         int         目标人所属分组id
                        configType         int        提示方式(0-报警,1-通过)
                        alarmTime          string      报警时间   （报警时间0-每天，1-7表示星期，多个以逗号隔开）
 
@@ -454,8 +456,91 @@
                      pageNo           int
 
                       可选
-                      groupId         int          分组id
+                      poiGroupId         int          分组id
                         orgunitId     int           组织id
+
+
+-------------------------------------------------基础功能---------------------------------------------------------------
+39.通过历史列表                            /cfMosqueManage/facetrackHistory/passList.do          get
+           参数：  必选
+                    pageSize         int
+                    pageNo           int
+
+                    可选
+                    cmOrgunitId     int     摄像头所属组织Id
+                    srcId           String  摄像头UUID
+                    startTime      String    开始时间
+                    endTime        String    结束时间
+                    startPercent  String     开始阈值
+                    endPercent     String    结束阈值
+                    name           String    名字
+                    idCard         String   身份证
+                    gender         int       性别（0女，1男）
+                    isglasses      int        是否戴眼镜 （未知为0，1 戴眼镜，2没带眼镜）
+                    age            int      年龄
+                    ismoustache    int      是否有胡子   （0：未知 ，1：有 ，2没有）
+                    ishat          int      是否戴帽子（0：未知 ，1：有 ，2没有）
+
+
+
+               返回结果；
+
+
+40.报警历史列表                            /cfMosqueManage/alarmHistory/alarmList.do          get
+                     参数：  必选
+                       pageSize         int
+                       ageNo           int
+
+                      可选
+                      cmOrgunitId     int     摄像头所属组织Id
+                       srcId           String  摄像头UUID
+                       startTime      String    开始时间
+                       endTime        String    结束时间
+                       startPercent  String     开始阈值
+                       endPercent     String    结束阈值
+                        name           String    名字
+                        idCard         String   身份证
+                        gender         int       性别（0女，1男）
+                       isglasses      int        是否戴眼镜 （未知为0，1 戴眼镜，2没带眼镜）
+                        age            int      年龄
+                       ismoustache    int      是否有胡子   （0：未知 ，1：有 ，2没有）
+                      ishat          int      是否戴帽子（0：未知 ，1：有 ，2没有）
+
+                      返回结果；
+
+ 41.移除facetrack上的某些照片                  /cfMosqueManage/facetrackHistory/removeFaceImg.do          post
+                  必选参数；
+                      facetrackId       int     人脸记录Id
+                       imgNames         String          照片名字集合(多个用逗号隔开)
+
+
+42.绑定人脸记录                                                     /cfMosqueManage/poi/bindFacetrack.do    post
+                  必选参数：
+                  facetrackId         int     人脸记录Id
+                  personId            int      personId
+
+
+43.通过facetrack创建新的person                 /cfMosqueManage /poi/addByFacetrack.do post
+                必选参数：
+                facetrackId           int     人脸记录Id
+                name          String      名字
+                gender        int        性别
+               threshold     int       阈值
+                groupId       int       分组id
+                household_register string 户籍
+
+              可选
+              orgunitId              int         所属组织id
+              identityCard           String       身份证
+              impTag                  String        标签
+              memo                  String         备注
+
+            返回结果
+
+
+44.获取所有的摄像头      /cfMosqueManage/camrea/listAll.do    get
+
+45.获取所有的分组      /cfMosqueManage/group/listAll.do    get
 
 
 

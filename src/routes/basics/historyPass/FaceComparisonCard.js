@@ -8,20 +8,29 @@ import styles from './historyPass.less';
 import testImg from '../../../assets/gyc.jpg';
 
 
-const FaceComparisonCard = ({ onClick }) => (
+const FaceComparisonCard = ({data, matchData, onClick }) => (
+
   <div>
     <div className={styles.card} onClick={onClick}>
-      <img src={testImg} alt="" className={styles.camera}/>
+      <img src={data.imgs[0]} alt="" className={styles.camera}/>
       <div className={styles.textGroup}>
-        <p>李寻欢</p>
-        <p>41252236523552234</p>
-        <p>杀人犯组</p>
-        <p>男/青年/有胡子</p>
-        <p>打浦桥下行路口</p>
-        <p>2017-12-19 18:16:25</p>
+        <p>{matchData.name}</p>
+        <p>{matchData.identityCard}</p>
+        <p>{matchData.poigroupData.groupName}</p>
+        <p>
+          <span>{data.gender}</span>
+          <span>{data.isglasses ? '/有眼镜' : ''}</span>
+          <span>{data.ismoustache ? '/有胡子' : ''}</span>
+          <span>{data.ishat ? '/戴帽子' : ''}</span>
+        </p>
+        <p>{data.srcName}</p>
+        <p>{data.captureTime}</p>
       </div>
-      <img src={testImg} alt="" className={styles.faceTrack}/>
-      <Progress percent={30} size="small" strokeWidth={4} styles={{marginTop: '50px'}}/>
+      <div className={styles.faceTrack}>
+        <img src={matchData.imgs.length > 0 ? matchData.imgs[0] : matchData.uoloadImgs[0]} alt=""/>
+        <div className={styles.ku_icon} />
+      </div>
+      <Progress percent={matchData.score} size="small" strokeWidth={4} styles={{marginTop: '50px'}}/>
     </div>
 
   </div>

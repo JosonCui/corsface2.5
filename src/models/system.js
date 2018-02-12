@@ -43,11 +43,14 @@ export default {
       modifyRole: {
         id: '',
         name: '',
-        memo: ''
+        memo: '',
+        moduleId: ''
       },
       deleteRole: {
         id: ''
-      }
+      },
+      moduleList: [],
+      subModules: []
     },
     userCfg: {
       getUserParams: {
@@ -133,6 +136,29 @@ export default {
           // TODO
       }
     },
+    * roleGetAllModule({payload}, {put, call, select}) {
+      const roleCfg = yield select(store => store.system.roleCfg);
+      let {subModules} = roleCfg;
+      const response = yield call(getAllModule);
+      if (isApiSuccess(response)) {
+        const result = apiData(response);
+        for (let i = 0; i < result.length; i++) {
+          subModules = subModules.concat(result[i].moduleList);
+          yield put({
+            type: 'success',
+            payload: {
+              roleCfg: {
+                ...roleCfg,
+                moduleList: result,
+                subModules: subModules.concat(result[i].moduleList)
+              }
+            }
+          });
+        }
+      } else {
+            // TODO
+      }
+    },
     * getAllRoles({ payload }, { put, call, select }) {
       const roleCfg = yield select(store => store.system.roleCfg);
       const response = yield call(getAllRoles);
@@ -146,6 +172,9 @@ export default {
               roleList: result
             }
           }
+        });
+        yield put({
+          type: 'roleGetAllModule'
         });
       } else {
           // TODO
@@ -167,7 +196,8 @@ export default {
               modifyRole: {
                 roleId: '',
                 name: '',
-                memo: ''
+                memo: '',
+                moduleId: ''
               }
             }
           }
@@ -193,7 +223,8 @@ export default {
               modifyRole: {
                 roleId: '',
                 name: '',
-                memo: ''
+                memo: '',
+                moduleId: ''
               }
             }
           }
@@ -270,6 +301,7 @@ export default {
       if (isApiSuccess(response)) {
         const result = apiData(response);
         const moduleId = result && result.length > 0 ? result.map(item => item.moduleId) : [];
+        const initModuleId = result && result.length > 0 ? result.filter(item => item.isHome === 1) : [];
         yield put({
           type: 'success',
           payload: {
@@ -277,8 +309,9 @@ export default {
               ...powerCfg,
               bindRoleModuleParams: {
                 ...bindRoleModuleParams,
-                moduleId // TODO
-              }
+                moduleId// TODO
+              },
+              initModuleId
             }
           }
         });
@@ -290,28 +323,26 @@ export default {
       const powerCfg = yield select(store => store.system.powerCfg);
       const { bindRoleModuleParams, moduleList } = powerCfg;
 
+      /* 从整体的modules里找到选中module的父节点Id,添加或删除 */
       moduleList.map((value, index) => {
         let flag = false;
-        console.log(bindRoleModuleParams.moduleId);
         moduleList[index].moduleList.map(item => {
-          console.log(moduleList[index].moduleList);
           if (bindRoleModuleParams.moduleId.indexOf(item.moduleId) !== -1) {
             flag = true;
             if (bindRoleModuleParams.moduleId.indexOf(moduleList[index].moduleId) === -1) {
-              console.log(moduleList[index].moduleId);
-              return bindRoleModuleParams.moduleId.push(moduleList[index].moduleId);
+              bindRoleModuleParams.moduleId.push(moduleList[index].moduleId);
             }
           }
           if (!flag) {
             if (bindRoleModuleParams.moduleId.indexOf(moduleList[index].moduleId) !== -1) {
-                bindRoleModuleParams.moduleId = bindRoleModuleParams.moduleId.slice(bindRoleModuleParams.moduleId.indexOf(moduleList[index].moduleId), 1);
+              bindRoleModuleParams.moduleId.splice(bindRoleModuleParams.moduleId.indexOf(moduleList[index].moduleId), 1);
             }
           }
         });
       });
       const moduleIds = bindRoleModuleParams.moduleId.join(',');
       if (moduleIds === '') {
-        return false;// modal
+        return false;// modal 必须有一个默认模块
       }
       const response = yield call(bindRoleModule, {
         roleId: bindRoleModuleParams.powerRoleId,
@@ -368,6 +399,7 @@ export default {
           // TODO
       }
     },
+
     * addUser({ payload }, { put, call, select }) {
       const userCfg = yield select(store => store.system.userCfg);
       const { modifyUser } = userCfg;

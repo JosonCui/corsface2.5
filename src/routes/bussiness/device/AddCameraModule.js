@@ -132,18 +132,18 @@ const AddCameraModule = ({ visiable,
           <Input className={styles.input} onChange={onCjdURLChange} value={dataSource.cjdUrl}/>
           <Button style={{marginLeft: '20px'}} type="primary">测试</Button>
         </div>
-        <div className={styles.serchWrap}>
-          <div className={styles.text}>* 采集端</div>
-          <Select
-            className={styles.input}
-            placeholder="请选择采集端"
-            value={dataSource.cjdUuid}
-            onChange={onCjdUChange}
-          >
-            <Select.Option value={'0'}>A采集端</Select.Option>
-            <Select.Option value={'1'}>B采集端</Select.Option>
-          </Select>
-        </div>
+        {/*<div className={styles.serchWrap}>*/}
+          {/*<div className={styles.text}>* 采集端</div>*/}
+          {/*<Select*/}
+            {/*className={styles.input}*/}
+            {/*placeholder="请选择采集端"*/}
+            {/*value={dataSource.cjdUuid}*/}
+            {/*onChange={onCjdUChange}*/}
+          {/*>*/}
+            {/*<Select.Option value={'0'}>A采集端</Select.Option>*/}
+            {/*<Select.Option value={'1'}>B采集端</Select.Option>*/}
+          {/*</Select>*/}
+        {/*</div>*/}
         <div className={styles.serchWrap}>
           <div className={styles.text}>* 采集端口</div>
           <Input className={styles.input} onChange={onCjdSubIdChange} value={dataSource.cjdSubid}/>
